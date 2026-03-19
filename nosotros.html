@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Freework - Nosotros</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            /* Protección contra selección de texto */
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none; /* Standard */
+            -webkit-font-smoothing: antialiased; 
+            -moz-osx-font-smoothing: grayscale;
+        }
+        html { scroll-behavior: smooth; }
+        html, body { overflow-x: hidden; width: 100%; }
+
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up { animation: fade-in-up 0.8s ease-out forwards; }
+
+        /* Estilos Corporativos (Tonos Fucsia/Morado) */
+        .brand-gradient { background-image: linear-gradient(to right, #7c3aed, #c026d3); }
+        .text-gradient {
+            background-clip: text; -webkit-background-clip: text; color: transparent;
+            background-image: linear-gradient(to right, #7c3aed, #c026d3);
+        }
+
+        .no-tap-highlight { -webkit-tap-highlight-color: transparent; }
+
+        /* ==========================================
+           Estilos Premium Modal Formulario B2B
+           ========================================== */
+        @keyframes fadeInOverlay { from { opacity: 0; backdrop-filter: blur(0px); } to { opacity: 1; backdrop-filter: blur(8px); } }
+        @keyframes scaleUpModal { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        
+        .animate-overlay { animation: fadeInOverlay 0.4s ease-out forwards; }
+        .animate-modal { animation: scaleUpModal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        /* Botón de Acción Indigo/Purple Modal */
+        .btn-action-b2b {
+            background: linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
+            box-shadow: 
+                inset 0 1px 1px rgba(255,255,255,0.4), 
+                inset 0 -2px 4px rgba(0,0,0,0.3),
+                0 10px 20px -5px rgba(99,102,241,0.5);
+            border: 1px solid rgba(99,102,241,0.8);
+            transition: all 0.3s ease;
+        }
+        .btn-action-b2b:active { transform: scale(0.98); opacity: 0.9; }
+
+        /* Inputs Fintech Premium Modal */
+        .glass-input {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #f8fafc;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.4);
+        }
+        .glass-input:focus {
+            outline: none;
+            background: rgba(99, 102, 241, 0.05);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.4), 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        .glass-input::placeholder { color: rgba(255, 255, 255, 0.2); font-weight: 400; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+        .no-scrollbar { -ms-overflow-style: none !important; scrollbar-width: none !important; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased select-none" oncontextmenu="return false;" oncopy="return false;" oncut="return false;" onpaste="return false;" ondragstart="return false;">
+
+    <!-- Hero / Manifiesto -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-[#0B0F19]">
+        <!-- Background Gradients (Modo Oscuro Premium) -->
+        <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-violet-600/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-fuchsia-600/20 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/3 pointer-events-none"></div>
+
+        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+            <div class="animate-fade-in-up">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/10 mb-8 backdrop-blur-md">
+                    <i data-lucide="rocket" class="text-fuchsia-400" width="16" height="16"></i>
+                    <span class="text-[11px] font-black text-white tracking-widest uppercase">Nuestra Misión</span>
+                </div>
+                
+                <h1 class="text-4xl md:text-6xl lg:text-[72px] font-black text-white tracking-tighter mb-8 leading-[1.1]">
+                    No ofrecemos empleos. <br class="hidden md:block"/>
+                    <span class="text-gradient">Construimos libertad.</span>
+                </h1>
+                
+                <p class="text-lg md:text-xl text-slate-400 mb-12 leading-relaxed font-medium">
+                    Bienvenido a Freework. Somos la solución perfecta que está revolucionando la industria. Creamos la conexión ideal donde los <strong class="text-white">vendedores ganan independencia financiera</strong> y las <strong class="text-white">empresas escalan sus ventas</strong> con el mejor talento del mercado.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Flujo Constante -->
+    <section class="py-16 lg:py-24 bg-white border-b border-slate-100 relative -mt-10 rounded-t-[3rem] z-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <h2 class="text-2xl lg:text-4xl font-black text-slate-900 mb-4 tracking-tight">Un ecosistema vivo y en expansión.</h2>
+                <p class="text-slate-500">Más que números estáticos, somos una comunidad dinámica donde el talento y la tecnología nunca se detienen.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Tarjeta 1 -->
+                <div class="p-6 rounded-[2rem] bg-slate-50 border border-slate-100 hover:border-violet-200 transition-colors group">
+                    <div class="w-12 h-12 rounded-xl bg-violet-100 flex items-center justify-center text-violet-600 mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="user-plus" width="24" height="24"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Flujo Constante de Talento</h3>
+                    <p class="text-sm text-slate-500 font-medium">Nuevos ejecutivos y vendedores se suscriben y capacitan en nuestra plataforma todos los días.</p>
+                </div>
+
+                <!-- Tarjeta 2 -->
+                <div class="p-6 rounded-[2rem] bg-slate-50 border border-slate-100 hover:border-fuchsia-200 transition-colors group">
+                    <div class="w-12 h-12 rounded-xl bg-fuchsia-100 flex items-center justify-center text-fuchsia-600 mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="activity" width="24" height="24"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Operación Ininterrumpida</h3>
+                    <p class="text-sm text-slate-500 font-medium">Miles de interacciones y gestiones de ventas procesadas diariamente sin pausas.</p>
+                </div>
+
+                <!-- Tarjeta 3 -->
+                <div class="p-6 rounded-[2rem] bg-slate-50 border border-slate-100 hover:border-blue-200 transition-colors group">
+                    <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="layers" width="24" height="24"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Multiplataforma</h3>
+                    <p class="text-sm text-slate-500 font-medium">Compatibilidad total con las principales marcas y sistemas de telecomunicaciones del país.</p>
+                </div>
+
+                <!-- Tarjeta 4 -->
+                <div class="p-6 rounded-[2rem] bg-slate-50 border border-slate-100 hover:border-emerald-200 transition-colors group">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="sparkles" width="24" height="24"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Evolución Tecnológica</h3>
+                    <p class="text-sm text-slate-500 font-medium">Integración continua de IA y automatización para respaldar a nuestra comunidad humana.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Línea de Tiempo (Nuestra Historia) -->
+    <section class="py-20 lg:py-32 bg-slate-50">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-20">
+                <span class="text-violet-600 font-black tracking-widest uppercase text-[10px] mb-4 block">Nuestra Trayectoria</span>
+                <h2 class="text-3xl lg:text-5xl font-black text-slate-900 tracking-tight">Así es como empezamos.</h2>
+            </div>
+
+            <!-- Timeline Vertical -->
+            <div class="relative border-l-2 border-violet-200 ml-4 md:ml-1/2">
+                
+                <!-- Hito 2020 -->
+                <div class="mb-12 relative pl-8 md:pl-0">
+                    <div class="hidden md:block absolute w-1/2 right-full pr-8 text-right top-1">
+                        <span class="text-3xl font-black text-violet-200">2020</span>
+                    </div>
+                    <div class="absolute w-5 h-5 bg-violet-600 rounded-full -left-[11px] md:left-1/2 md:-ml-[11px] top-2 border-4 border-slate-50 shadow-md"></div>
+                    <div class="md:w-1/2 md:ml-auto md:pl-8">
+                        <span class="md:hidden text-2xl font-black text-violet-600 block mb-2">2020</span>
+                        <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100">
+                            <h3 class="text-xl font-bold text-slate-900 mb-2">Identificando Necesidades</h3>
+                            <p class="text-slate-500 text-sm">Comenzamos a identificar necesidades críticas en el área comercial, tanto desde la realidad de los vendedores como del lado empresarial. Durante años nos dedicamos a recopilar esta información vital en el terreno.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hito 2022 -->
+                <div class="mb-12 relative pl-8 md:pl-0">
+                    <div class="hidden md:block absolute w-1/2 right-full pr-8 text-right top-1">
+                        <span class="text-3xl font-black text-fuchsia-200">2022</span>
+                    </div>
+                    <div class="absolute w-5 h-5 bg-fuchsia-500 rounded-full -left-[11px] md:left-1/2 md:-ml-[11px] top-2 border-4 border-slate-50 shadow-md"></div>
+                    <div class="md:w-1/2 md:ml-auto md:pl-8">
+                        <span class="md:hidden text-2xl font-black text-fuchsia-500 block mb-2">2022</span>
+                        <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100">
+                            <h3 class="text-xl font-bold text-slate-900 mb-2">Formación y Retroalimentación</h3>
+                            <p class="text-slate-500 text-sm">Al armar y capacitar grupos de ventas para distintas empresas, nos retroalimentamos constantemente de diversas realidades y sectores comerciales. Sumando esta experiencia en terreno, construimos un ecosistema híbrido con soluciones mixtas, diseñado para cubrir las exigencias reales del mercado.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hito Actualidad -->
+                <div class="relative pl-8 md:pl-0">
+                    <div class="hidden md:block absolute w-1/2 right-full pr-8 text-right top-1">
+                        <span class="text-3xl font-black text-violet-200">Hoy</span>
+                    </div>
+                    <div class="absolute w-5 h-5 bg-violet-600 rounded-full -left-[11px] md:left-1/2 md:-ml-[11px] top-2 border-4 border-slate-50 shadow-md">
+                        <div class="absolute inset-0 rounded-full bg-violet-500 animate-ping opacity-50"></div>
+                    </div>
+                    <div class="md:w-1/2 md:ml-auto md:pl-8">
+                        <span class="md:hidden text-2xl font-black text-violet-600 block mb-2">Hoy</span>
+                        <div class="brand-gradient p-6 rounded-2xl shadow-xl border border-white/10 text-white">
+                            <h3 class="text-xl font-bold mb-2">El Modelo 360°</h3>
+                            <p class="text-white/90 text-sm">Logramos integrar lo mejor del talento humano, potenciando sus capacidades, con la eficiencia, precisión y rapidez de la tecnología avanzada (bots, automatización e IA). El modelo 360° definitivo se ha consolidado.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Doble CTA (Cierre) -->
+    <section class="py-16 lg:py-24 px-6 bg-white border-t border-slate-100">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl lg:text-5xl font-black text-slate-900 mb-4 tracking-tighter">¿Preparado para iniciar tu viaje?</h2>
+                <p class="text-slate-500 text-lg">Elige cómo quieres ser parte de la revolución Freework.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+                <!-- CTA Ejecutivo -->
+                <a href="registro.html" target="_top" class="group relative overflow-hidden rounded-3xl p-8 border border-slate-200 bg-white hover:border-violet-300 hover:shadow-2xl hover:shadow-violet-200 transition-all text-center">
+                    <div class="absolute inset-0 bg-violet-50 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
+                    <div class="relative z-10">
+                        <div class="w-16 h-16 mx-auto rounded-full brand-gradient text-white flex items-center justify-center mb-6 shadow-lg">
+                            <i data-lucide="user" width="32" height="32"></i>
+                        </div>
+                        <h3 class="text-2xl font-black text-slate-900 mb-2">Soy Ejecutivo</h3>
+                        <p class="text-slate-500 text-sm font-medium mb-6">Quiero unirme, manejar mis horarios y escalar mis ingresos.</p>
+                        <span class="inline-flex font-bold text-violet-600 group-hover:text-violet-700">Regístrate Gratis &rarr;</span>
+                    </div>
+                </a>
+
+                <!-- CTA Empresa (CONECTADO AL MODAL) -->
+                <a href="#" onclick="openContactModal(event)" class="group relative overflow-hidden rounded-3xl p-8 border border-slate-200 bg-white hover:border-fuchsia-300 hover:shadow-2xl hover:shadow-fuchsia-200 transition-all text-center cursor-pointer">
+                    <div class="absolute inset-0 bg-fuchsia-50 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
+                    <div class="relative z-10">
+                        <div class="w-16 h-16 mx-auto rounded-full bg-slate-900 text-white flex items-center justify-center mb-6 shadow-lg">
+                            <i data-lucide="building-2" width="32" height="32"></i>
+                        </div>
+                        <h3 class="text-2xl font-black text-slate-900 mb-2">Soy Empresa</h3>
+                        <p class="text-slate-500 text-sm font-medium mb-6">Busco externalizar mis ventas y automatizar procesos.</p>
+                        <span class="inline-flex font-bold text-slate-900 group-hover:text-fuchsia-700">Ver Soluciones &rarr;</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Simple -->
+    <footer class="bg-slate-50 py-10 border-t border-slate-200 text-center">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col items-center justify-center gap-4">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 brand-gradient rounded flex items-center justify-center text-white">
+                    <i data-lucide="zap" width="12" height="12" fill="white"></i>
+                </div>
+                <span class="text-xs font-bold text-slate-900 uppercase tracking-widest">Freework</span>
+            </div>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                © 2024. Santiago, Chile.
+            </p>
+        </div>
+    </footer>
+
+    <!-- ========================================== -->
+    <!-- MODAL DE CONTACTO B2B (COMPONENT READY)    -->
+    <!-- ========================================== -->
+    <div id="contactModal" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4">
+        <!-- Fondo oscuro borroso -->
+        <div class="absolute inset-0 bg-[#020408]/80 backdrop-blur-sm animate-overlay cursor-pointer" onclick="closeContactModal()"></div>
+        
+        <!-- Contenedor del Formulario -->
+        <div class="w-full max-w-md max-h-[90vh] overflow-y-auto no-scrollbar bg-[#060910]/95 backdrop-blur-[40px] rounded-[2.5rem] border border-white/10 shadow-[0_40px_80px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.15)] relative animate-modal text-left">
+            
+            <!-- Botón Cerrar Superior -->
+            <button onclick="closeContactModal()" class="absolute top-6 right-6 w-9 h-9 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/50 hover:bg-white/10 hover:text-white transition-all z-20">
+                <i data-lucide="x" width="18" height="18"></i>
+            </button>
+
+            <!-- Decoración de Luces -->
+            <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-indigo-500/60 to-transparent"></div>
+            <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-64 h-64 bg-purple-500/20 rounded-full blur-[60px] pointer-events-none"></div>
+
+            <div class="p-8 lg:p-10 relative z-10">
+                <!-- Encabezado -->
+                <div class="mb-8 pr-8">
+                    <h3 class="text-2xl font-black text-white tracking-tight drop-shadow-md">Únete a la Familia <span class="opacity-90">🤝</span></h3>
+                    <p class="text-xs text-indigo-300/80 font-medium leading-relaxed mt-2 drop-shadow-sm uppercase tracking-wide">Protocolo de Alianza Comercial</p>
+                </div>
+
+                <!-- Formulario -->
+                <form id="b2b-form" onsubmit="sendWhatsApp(event)" class="space-y-5">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-[9px] font-bold text-slate-400 ml-1 mb-1.5 flex items-center gap-1.5 uppercase tracking-wider"><i data-lucide="user" class="w-3 h-3 text-indigo-400"></i> ¿Nombre?</label>
+                            <input type="text" id="b2b-nombre" required class="w-full h-11 rounded-xl glass-input px-4 text-xs font-medium" placeholder="Ej. Juan Pérez">
+                        </div>
+                        <div>
+                            <label class="text-[9px] font-bold text-slate-400 ml-1 mb-1.5 flex items-center gap-1.5 uppercase tracking-wider"><i data-lucide="smartphone" class="w-3 h-3 text-indigo-400"></i> WhatsApp</label>
+                            <input type="tel" id="b2b-telefono" required class="w-full h-11 rounded-xl glass-input px-4 text-xs font-medium" placeholder="+56 9...">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-[9px] font-bold text-slate-400 ml-1 mb-1.5 flex items-center gap-1.5 uppercase tracking-wider"><i data-lucide="building-2" class="w-3 h-3 text-purple-400"></i> Marca</label>
+                            <input type="text" id="b2b-empresa" required class="w-full h-11 rounded-xl glass-input px-4 text-xs font-medium" placeholder="Empresa">
+                        </div>
+                        <div>
+                            <label class="text-[9px] font-bold text-slate-400 ml-1 mb-1.5 flex items-center gap-1.5 uppercase tracking-wider"><i data-lucide="briefcase" class="w-3 h-3 text-purple-400"></i> Cargo</label>
+                            <input type="text" id="b2b-cargo" required class="w-full h-11 rounded-xl glass-input px-4 text-xs font-medium" placeholder="Tu rol">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-[9px] font-bold text-slate-400 ml-1 mb-1.5 flex items-center gap-1.5 uppercase tracking-wider"><i data-lucide="mail" class="w-3 h-3 text-indigo-400"></i> Correo Corporativo</label>
+                        <input type="email" id="b2b-email" required class="w-full h-11 rounded-xl glass-input px-4 text-xs font-medium" placeholder="Para propuestas formales">
+                    </div>
+
+                    <div>
+                        <label class="text-[9px] font-bold text-slate-400 ml-1 mb-1.5 flex items-center gap-1.5 uppercase tracking-wider"><i data-lucide="lightbulb" class="w-3 h-3 text-purple-400"></i> Tu Visión</label>
+                        <textarea id="b2b-idea" required rows="3" class="w-full rounded-xl glass-input p-4 text-xs font-medium resize-none leading-relaxed" placeholder="¿Cómo imaginas que podemos romperla juntos en el mercado?"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full h-14 mt-4 rounded-xl btn-action-b2b flex items-center justify-center gap-3 text-[11px] uppercase tracking-[0.2em] font-black text-white">
+                        <i data-lucide="send" class="w-4 h-4"></i> Enviar a Dirección
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- ========================================== -->
+
+    <script>
+        // Inicializar Iconos de Lucide
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+
+        // ---- LÓGICA DEL MODAL ----
+        function openContactModal(e) {
+            if(e) e.preventDefault();
+            const modal = document.getElementById('contactModal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeContactModal() {
+            const modal = document.getElementById('contactModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // ---- LÓGICA DE WHATSAPP ----
+        function sendWhatsApp(event) {
+            event.preventDefault();
+
+            const numeroWhatsApp = "56927372611"; 
+
+            const nombre = document.getElementById('b2b-nombre').value.trim();
+            const telefono = document.getElementById('b2b-telefono').value.trim();
+            const empresa = document.getElementById('b2b-empresa').value.trim();
+            const cargo = document.getElementById('b2b-cargo').value.trim();
+            const email = document.getElementById('b2b-email').value.trim();
+            const idea = document.getElementById('b2b-idea').value.trim();
+
+            const mensaje = `*¡HOLA! QUIERO UNIRME A LA FAMILIA FREEWORK* 🤝🚀\n\n` +
+                            `Hola equipo, me encantaría explorar una alianza con ustedes. Aquí dejo mis datos:\n\n` +
+                            `*👤 Mi Nombre:* ${nombre}\n` +
+                            `*🏢 Represento a:* ${empresa}\n` +
+                            `*👔 Mi Rol:* ${cargo}\n` +
+                            `*📱 Mi WhatsApp:* ${telefono}\n` +
+                            `*✉️ Correo Oficial:* ${email}\n\n` +
+                            `*💡 Nuestra visión para crecer juntos:*\n_${idea}_\n\n` +
+                            `¡Quedo súper atento para conversar!`;
+
+            const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+            window.open(url, '_blank');
+
+            // Limpiar formulario y cerrar
+            document.getElementById('b2b-form').reset();
+            closeContactModal();
+        }
+    </script>
+</body>
+</html>

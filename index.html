@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freework - Plataforma Unificada</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* Tipografía Corporativa Premium */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        /* ==========================================================
+           1. CONFIGURACIÓN BASE Y CONTENEDOR IFRAME
+           ========================================================== */
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden; /* Evita doble scroll, el scroll será dentro del iframe */
+            background-color: #f8fafc; /* Color de fondo base neutro */
+        }
+
+        #content-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .no-tap-highlight { -webkit-tap-highlight-color: transparent; }
+        .click-through { pointer-events: none; }
+        .click-catch { pointer-events: auto; }
+
+        /* ==========================================================
+           2. ESTILOS ESCRITORIO (FLOATING DOCK DINÁMICO)
+           ========================================================== */
+        .desktop-dock {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 
+                0 16px 40px -8px rgba(0, 0, 0, 0.08),
+                0 6px 16px -4px rgba(0, 0, 0, 0.04),
+                inset 0 1px 1px rgba(255, 255, 255, 1),
+                inset 0 -1px 1px rgba(255, 255, 255, 0.3);
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 6px 6px 20px;
+            gap: 16px;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .desktop-links-container {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-link-desktop {
+            position: relative;
+            color: #475569;
+            font-size: 13.5px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 9999px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .nav-link-desktop:hover { 
+            color: #0f172a; 
+            background: rgba(0, 0, 0, 0.03);
+        }
+        
+        .nav-link-desktop.is-active { 
+            color: #5B3281; 
+            font-weight: 700; 
+            background: rgba(91, 50, 129, 0.06);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        /* ==========================================================
+           3. ESTILOS MÓVIL (ISLA DINÁMICA ULTRA PREMIUM)
+           ========================================================== */
+        .mobile-pill {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            height: 64px;
+            padding: 6px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border-radius: 9999px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 
+                0 24px 48px -12px rgba(0,0,0,0.15),
+                0 8px 24px -6px rgba(0,0,0,0.08),
+                inset 0 1px 2px rgba(255,255,255,1);
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            width: 64px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .mobile-pill.is-open {
+            width: 100%;
+        }
+
+        .scroll-mask-view {
+            display: flex;
+            align-items: center;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+            width: 100%;
+            height: 100%;
+            flex-grow: 1;
+            padding: 0 16px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .mobile-pill.is-open .scroll-mask-view { opacity: 1; transition-delay: 0.1s; }
+        .scroll-mask-view::-webkit-scrollbar { display: none; }
+
+        .links-inner-track {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+            padding-right: 30px;
+            padding-left: 5px;
+        }
+        .mobile-pill.is-open .links-inner-track {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .nav-link-mobile {
+            position: relative;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .nav-link-mobile.is-active { 
+            color: #5B3281; 
+            font-weight: 800;
+            background: rgba(91, 50, 129, 0.08);
+        }
+
+        /* Micro-Barra Móvil */
+        .progress-indicator-bg {
+            position: absolute;
+            bottom: 6px;
+            left: 20%;
+            right: 35%;
+            height: 3px;
+            background: rgba(0,0,0,0.06);
+            border-radius: 10px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .mobile-pill.is-open .progress-indicator-bg { opacity: 1; }
+        
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #5B3281, #c026d3);
+            border-radius: 10px;
+            transition: width 0.15s ease-out;
+        }
+
+        /* ==========================================================
+           4. BOTÓN DE ACCIÓN CTA
+           ========================================================== */
+        .btn-action-premium {
+            background: linear-gradient(135deg, #5B3281 0%, #3b1654 100%);
+            color: white;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 
+                0 8px 20px -4px rgba(91, 50, 129, 0.4),
+                inset 0 1px 1px rgba(255, 255, 255, 0.2),
+                inset 0 -2px 4px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 50;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-action-premium:hover {
+            transform: scale(1.02);
+            box-shadow: 
+                0 12px 25px -4px rgba(91, 50, 129, 0.5),
+                inset 0 1px 1px rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-action-premium:active { transform: scale(0.98); }
+
+        .icon-box-trigger {
+            width: 52px; 
+            height: 52px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body class="relative w-full h-full">
+
+    <!-- IFRAME QUE MUESTRA TODAS LAS PÁGINAS (ACTUALIZADO A INICIO.HTML) -->
+    <iframe id="content-frame" src="inicio.html" title="Contenido Principal"></iframe>
+
+    <!-- 
+      ========================================================================
+      💻 VISTA WEB (ESCRITORIO - AUTO-HUGGING DOCK)
+      ========================================================================
+    -->
+    <header class="hidden md:flex fixed top-6 left-0 w-full justify-center z-[9999] px-6 click-through">
+        <nav class="desktop-dock click-catch">
+            
+            <!-- Contenedor de enlaces dinámicos -->
+            <div id="desktop-links" class="desktop-links-container"></div>
+
+            <!-- Línea separadora sutil -->
+            <div class="w-[1px] h-8 bg-slate-200 mx-2"></div>
+
+            <!-- Botón CTA Premium que ahora carga el iframe -->
+            <a onclick="loadInIframe('registro.html')" class="btn-action-premium no-tap-highlight flex items-center text-white rounded-full py-3 px-6 font-bold text-sm tracking-tight border border-white/10 shrink-0">
+                <div class="mr-2.5 bg-white/20 p-1.5 rounded-full flex items-center justify-center border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/>
+                    </svg>
+                </div>
+                Registro FreeWork
+            </a>
+            
+        </nav>
+    </header>
+
+    <!-- 
+      ========================================================================
+      📱 VISTA MÓVIL (ISLA DINÁMICA CENTRADA PREMIUM)
+      ========================================================================
+    -->
+    <div class="md:hidden fixed top-5 left-1/2 -translate-x-1/2 z-[9999] click-through w-[92%] max-w-[400px] flex justify-center">
+        <nav id="mobile-pill-frame" class="mobile-pill click-catch is-open">
+            
+            <div id="scroll-box-m" class="scroll-mask-view">
+                <div id="mobile-links-track" class="links-inner-track">
+                    <!-- Los enlaces se inyectan aquí -->
+                </div>
+            </div>
+
+            <div class="progress-indicator-bg">
+                <div id="fill-bar-m" class="progress-fill"></div>
+            </div>
+
+            <!-- Botón Disparador (Cerrar/Abrir) -->
+            <div id="trigger-m" class="icon-box-trigger btn-action-premium no-tap-highlight">
+                <svg id="icon-u-m" class="hidden" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                </svg>
+                <svg id="icon-x-m" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </div>
+            
+        </nav>
+    </div>
+
+    <!-- 
+      ========================================================================
+      ⚙️ LÓGICA DE NAVEGACIÓN Y CONTROL DEL IFRAME
+      ========================================================================
+    -->
+    <script>
+        const BOTONES = [
+            { nombre: 'Home', link: 'inicio.html' }, // ACTUALIZADO A INICIO.HTML
+            { nombre: 'Empresa', link: 'empresa.html' }, 
+            { nombre: 'Marcas', link: 'marcas.html' },
+            { nombre: 'Servicios', link: 'servicios.html' },
+            { nombre: 'Nosotros', link: 'nosotros.html' }, 
+            { nombre: 'Blog', link: 'blog.html' }
+        ];
+
+        // Función global para cargar URLs en el iframe y actualizar estados
+        function loadInIframe(urlTarget) {
+            const iframe = document.getElementById('content-frame');
+            iframe.src = urlTarget;
+            
+            // Actualizar la clase "is-active" visualmente
+            document.querySelectorAll('.nav-link-desktop, .nav-link-mobile').forEach(el => {
+                if (el.dataset.link === urlTarget) {
+                    el.classList.add('is-active');
+                } else {
+                    el.classList.remove('is-active');
+                }
+            });
+
+            // En móvil, contraer automáticamente la cápsula al hacer clic
+            if(window.innerWidth < 768) {
+                const mPill = document.getElementById('mobile-pill-frame');
+                const iUser = document.getElementById('icon-u-m');
+                const iClose = document.getElementById('icon-x-m');
+                
+                mPill.classList.remove('is-open');
+                iUser.classList.remove('hidden'); 
+                iClose.classList.add('hidden');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const dCont = document.getElementById('desktop-links');
+            const mCont = document.getElementById('mobile-links-track');
+            const mPill = document.getElementById('mobile-pill-frame');
+            const mTrigger = document.getElementById('trigger-m');
+            const mScroll = document.getElementById('scroll-box-m');
+            const mBar = document.getElementById('fill-bar-m');
+            
+            const iUser = document.getElementById('icon-u-m');
+            const iClose = document.getElementById('icon-x-m');
+
+            // 1. Inyectar Links
+            BOTONES.forEach((item, index) => {
+                // Generar enlace para Escritorio
+                const dL = document.createElement('a');
+                dL.textContent = item.nombre;
+                dL.dataset.link = item.link; // Guardar URL como data attribute
+                dL.className = `nav-link-desktop ${index === 0 ? 'is-active' : ''}`;
+                dL.onclick = () => loadInIframe(item.link);
+                dCont.appendChild(dL);
+
+                // Generar enlace para Móvil
+                const mL = document.createElement('a');
+                mL.textContent = item.nombre;
+                mL.dataset.link = item.link;
+                mL.className = `nav-link-mobile ${index === 0 ? 'is-active' : ''}`;
+                mL.onclick = () => loadInIframe(item.link);
+                mCont.appendChild(mL);
+            });
+
+            // 2. Interacción de Isla Dinámica (Abrir / Cerrar)
+            mTrigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const isOpen = mPill.classList.toggle('is-open');
+                if (isOpen) {
+                    iUser.classList.add('hidden'); 
+                    iClose.classList.remove('hidden');
+                } else {
+                    iUser.classList.remove('hidden'); 
+                    iClose.classList.add('hidden');
+                }
+            });
+
+            // 3. Barra de Recorrido Móvil
+            mScroll.addEventListener('scroll', () => {
+                const scrollable = mScroll.scrollWidth - mScroll.clientWidth;
+                const scrolled = mScroll.scrollLeft;
+                
+                if (scrollable > 0) {
+                    const percentage = (scrolled / scrollable) * 100;
+                    mBar.style.width = `${percentage}%`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

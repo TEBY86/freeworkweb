@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Freework - Para Vendedores Profesionales</title>
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons (CDN) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Config & Styles -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Protección contra selección de texto y copia */
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none; /* Standard */
+            -webkit-touch-callout: none; /* Evita menú contextual en móviles iOS */
+        }
+
+        /* Custom Animations */
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+            animation: fade-in-up 0.8s ease-out forwards;
+        }
+        
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(-5%); }
+            50% { transform: translateY(5%); }
+        }
+        .animate-bounce-slow {
+            animation: bounce-slow 3s infinite ease-in-out;
+        }
+
+        /* Gradient Utilities */
+        .brand-gradient {
+            background-image: linear-gradient(to right, #7c3aed, #c026d3); /* violet-600 to fuchsia-600 */
+        }
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(to right, #7c3aed, #c026d3);
+        }
+
+        /* Ultra Premium Button Styles */
+        .btn-action-premium {
+            background: linear-gradient(135deg, #4c1d95 0%, #2e1065 100%);
+            color: white;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 
+                0 0 0 1px rgba(255, 255, 255, 0.08),
+                0 15px 35px -5px rgba(124, 58, 237, 0.4),
+                inset 0 1px 1px rgba(255, 255, 255, 0.2),
+                inset 0 -2px 6px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated Shimmer Effect */
+        .btn-action-premium::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-20deg);
+            animation: premium-shimmer 4s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes premium-shimmer {
+            0% { left: -100%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
+        }
+
+        .btn-action-premium:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 0 0 1px rgba(255, 255, 255, 0.15),
+                0 20px 40px -5px rgba(124, 58, 237, 0.5),
+                inset 0 1px 1px rgba(255, 255, 255, 0.3),
+                inset 0 -2px 6px rgba(0, 0, 0, 0.4);
+        }
+        
+        .btn-action-premium:active {
+            transform: translateY(1px);
+            box-shadow: 
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                0 5px 15px -5px rgba(124, 58, 237, 0.3),
+                inset 0 1px 1px rgba(255, 255, 255, 0.1),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .no-tap-highlight { -webkit-tap-highlight-color: transparent; }
+        
+        /* Carousel Scrollbar Hide */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Fix for mobile overflow and smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-white text-slate-900 antialiased select-none selection:bg-violet-500 selection:text-white" oncontextmenu="return false;" oncopy="return false;" oncut="return false;" onpaste="return false;" ondragstart="return false;">
+
+    <!-- Hero Section: Enfoque en Respaldo al Vendedor -->
+    <!-- Restaurado el padding top (pt-32 lg:pt-48) para el menú de Wix -->
+    <section class="relative pt-32 pb-16 lg:pt-48 lg:pb-40 overflow-hidden">
+        <!-- Background Gradients -->
+        <div class="absolute top-0 right-0 w-[300px] h-[300px] lg:w-[600px] lg:h-[600px] bg-violet-100/60 rounded-full blur-[60px] lg:blur-[100px] -translate-y-1/2 translate-x-1/3 -z-10"></div>
+        <div class="absolute bottom-0 left-0 w-[300px] h-[300px] lg:w-[500px] lg:h-[500px] bg-fuchsia-100/60 rounded-full blur-[60px] lg:blur-[100px] translate-y-1/2 -translate-x-1/3 -z-10"></div>
+
+        <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            
+            <!-- Left Column: Copy -->
+            <div class="max-w-2xl animate-fade-in-up text-center lg:text-left mx-auto lg:mx-0">
+                <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-violet-50 border border-violet-100 mb-6 lg:mb-8">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-fuchsia-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-fuchsia-600"></span>
+                    </span>
+                    <span class="text-[10px] font-black text-fuchsia-600 tracking-[0.2em] uppercase">Para Vendedores de Alto Nivel</span>
+                </div>
+                
+                <h1 class="text-4xl md:text-5xl lg:text-[76px] font-black text-slate-900 tracking-tighter mb-6 lg:mb-8 leading-[1.1] lg:leading-[0.95]">
+                    Tus ventas merecen <br />
+                    <span class="text-gradient">
+                        el mejor respaldo.
+                    </span>
+                </h1>
+                
+                <p class="text-base lg:text-xl text-slate-500 mb-8 lg:mb-12 leading-relaxed font-medium lg:pr-4">
+                    La plataforma definitiva para <strong>vendedores de telecomunicaciones</strong>. Tú enfócate en cerrar ventas, nosotros garantizamos tu pago y la gestión operativa.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-center gap-5 justify-center lg:justify-start">
+                    <!-- BOTÓN DE REGISTRO PREMIUM -->
+                    <a href="registro.html" target="_top" class="btn-action-premium no-tap-highlight items-center justify-center text-white rounded-xl font-bold text-sm sm:text-base tracking-tight border-none box-border px-8 w-full sm:w-auto h-14">
+                        <div class="mr-2 sm:mr-3 bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-md p-1.5 sm:p-2 rounded-lg flex items-center justify-center border border-white/10 shrink-0 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] relative z-10">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <line x1="19" y1="8" x2="19" y2="14"/>
+                                <line x1="16" y1="11" x2="22" y2="11"/>
+                            </svg>
+                        </div>
+                        <span class="whitespace-nowrap drop-shadow-sm relative z-10">Registro FreeWork</span>
+                    </a>
+                    
+                    <div class="flex items-center gap-4 px-6 py-4 rounded-xl bg-white border border-slate-100 shadow-lg w-full sm:w-auto justify-center lg:justify-start">
+                        <div class="flex -space-x-3">
+                            <!-- Avatares simulados -->
+                            <div class="w-8 h-8 rounded-full border-2 border-white bg-slate-200 overflow-hidden">
+                                <img src="https://i.pravatar.cc/100?img=11" alt="Vendedor" draggable="false" style="pointer-events: none;">
+                            </div>
+                            <div class="w-8 h-8 rounded-full border-2 border-white bg-slate-200 overflow-hidden">
+                                <img src="https://i.pravatar.cc/100?img=59" alt="Vendedor" draggable="false" style="pointer-events: none;">
+                            </div>
+                            <div class="w-8 h-8 rounded-full border-2 border-white bg-slate-200 overflow-hidden">
+                                <img src="https://i.pravatar.cc/100?img=12" alt="Vendedor" draggable="false" style="pointer-events: none;">
+                            </div>
+                        </div>
+                        <div class="text-left">
+                            <p class="text-slate-900 text-xs font-bold">+1.2k</p>
+                            <p class="text-[9px] text-slate-400 uppercase tracking-wider">Vendedores Activos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NUEVO LLAMADO PARA EMPRESAS (DENTRO DEL HERO) -->
+                <div class="mt-8 lg:mt-10 p-2 pl-4 lg:pl-5 bg-white border border-slate-100 shadow-xl shadow-slate-200/50 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 w-full max-w-lg mx-auto lg:mx-0 group hover:border-violet-200 transition-colors">
+                    <div class="flex items-center gap-3 pt-2 sm:pt-0">
+                        <span class="relative flex h-2.5 w-2.5 shrink-0">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-fuchsia-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-fuchsia-500"></span>
+                        </span>
+                        <span class="text-sm font-bold text-slate-700">¿Eres empresa o lideras equipos?</span>
+                    </div>
+                    <a href="empresa.html" target="_top" class="w-full sm:w-auto text-center bg-slate-50 text-violet-700 border border-slate-200 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider hover:bg-violet-50 hover:border-violet-200 hover:text-violet-800 transition-all">
+                        Haz clic aquí <i data-lucide="arrow-right" width="14" height="14" class="inline-block ml-1"></i>
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Right Column: MÚLTIPLES MOCKUPS (LOGIN + DASHBOARD) -->
+            <div class="relative w-full max-w-[360px] lg:max-w-[480px] h-[550px] lg:h-[650px] mx-auto lg:mx-0 mt-12 lg:mt-0 flex items-center justify-center">
+                
+                <!-- Glow Behind Phones -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] lg:w-[450px] h-[500px] bg-violet-500/20 blur-[70px] -z-10 rounded-full pointer-events-none"></div>
+
+                <!-- PHONE 2 (DASHBOARD) - BACKGROUND / LEFT -->
+                <div class="absolute left-0 lg:-left-12 top-16 lg:top-12 w-[220px] h-[440px] lg:w-[270px] lg:h-[540px] bg-[#0f1115] rounded-[2rem] border-[6px] lg:border-[8px] border-[#1a1d24] shadow-2xl overflow-hidden z-10 transform -rotate-6 lg:-rotate-12 opacity-70 hover:opacity-100 hover:z-30 hover:-rotate-3 hover:scale-105 transition-all duration-500 cursor-pointer">
+                    <!-- Notch Background Phone -->
+                    <div class="absolute top-0 w-full h-5 z-20 flex justify-center">
+                        <div class="w-24 h-4 bg-[#1a1d24] rounded-b-lg"></div>
+                    </div>
+
+                    <!-- Screen UI (Dashboard) -->
+                    <div class="w-full h-full bg-[#F4F5F9] relative flex flex-col overflow-hidden">
+                        <!-- Header Dashboard -->
+                        <div class="bg-[#110D17] w-full pt-10 pb-4 px-4 rounded-b-[1.5rem] shadow-lg relative z-10 flex items-center gap-2">
+                            <div class="w-8 h-8 bg-[#9333ea] rounded-xl flex items-center justify-center text-white font-black text-sm shadow-[0_0_15px_rgba(147,51,234,0.4)] shrink-0">S</div>
+                            <div>
+                                <p class="text-[5.5px] lg:text-[6px] text-fuchsia-400 font-bold tracking-[0.15em] uppercase mb-0.5">Ejecutivo Elite</p>
+                                <h3 class="text-[13px] lg:text-[15px] font-black text-white tracking-tight leading-none">Hola, sebastian</h3>
+                            </div>
+                        </div>
+
+                        <!-- Content Area -->
+                        <div class="flex-1 px-3 pt-3 relative">
+                            <!-- Tarjeta 1: Ingresar Venta -->
+                            <div class="bg-white rounded-[1.2rem] p-2.5 shadow-sm mb-3 flex items-center gap-2.5 relative z-10">
+                                <div class="w-8 h-8 rounded-[0.8rem] bg-[#a855f7] flex items-center justify-center shrink-0 text-white shadow-md shadow-purple-500/20">
+                                    <i data-lucide="rocket" width="14" height="14"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-[11px] lg:text-[12px] font-black text-slate-900 mb-0.5 leading-none">Ingresar Venta</h4>
+                                    <p class="text-[5px] lg:text-[6px] font-bold text-slate-500 uppercase tracking-wider leading-[1.3] pr-1">El éxito es la suma de pequeños esfuerzos diarios. ¡Ve por más ventas!</p>
+                                </div>
+                            </div>
+
+                            <!-- Tarjeta 2: Directriz Central -->
+                            <div class="bg-gradient-to-br from-[#291854] to-[#120B29] rounded-[1.2rem] p-3 shadow-lg shadow-purple-900/10 mb-3 relative z-10">
+                                <div class="flex items-center gap-1.5 mb-1.5">
+                                    <div class="w-4 h-4 rounded-full border border-fuchsia-500/30 flex items-center justify-center text-fuchsia-400 bg-fuchsia-500/10 shrink-0">
+                                        <i data-lucide="message-square" width="8" height="8"></i>
+                                    </div>
+                                    <span class="text-[6px] lg:text-[7px] text-fuchsia-400 font-bold tracking-[0.1em] uppercase">Directriz Central</span>
+                                </div>
+                                <p class="text-[8px] lg:text-[9px] text-white/90 leading-[1.5] font-medium">
+                                    "El mercado no espera a los lentos. Cada seguimiento anotado es una comisión asegurada. <span class="font-bold text-white">Usa tu agenda y cobra tus lucas.</span>"
+                                </p>
+                            </div>
+
+                            <!-- Título de Sección -->
+                            <div class="flex items-center justify-between mb-2 px-1">
+                                <h5 class="text-[7px] lg:text-[8px] font-black text-slate-800 tracking-wider uppercase">Mi Gestión Activa</h5>
+                                <span class="text-[5px] lg:text-[6px] font-bold text-fuchsia-500 uppercase flex items-center gap-0.5">Ver todas <i data-lucide="arrow-right" width="6" height="6"></i></span>
+                            </div>
+
+                            <!-- Tarjeta 3: Crear Nueva Nota -->
+                            <div class="border-[1.5px] border-dashed border-slate-300 rounded-[1.2rem] p-3 flex flex-col items-center justify-center gap-1 bg-white/40 relative z-10">
+                                <div class="w-6 h-6 rounded-full border border-slate-200 flex items-center justify-center bg-white">
+                                    <i data-lucide="plus" width="10" height="10" class="text-slate-400"></i>
+                                </div>
+                                <span class="text-[6px] lg:text-[7px] font-bold text-slate-400 uppercase tracking-wider">Crear Nueva Nota</span>
+                                
+                                <!-- Floating Badge (Map Pin) -->
+                                <div class="absolute -right-1 -bottom-1 w-8 h-8 rounded-full bg-gradient-to-br from-[#f472b6] to-[#c026d3] flex items-center justify-center text-white border-[2px] border-[#F4F5F9] shadow-lg">
+                                    <i data-lucide="map-pin" width="10" height="10" fill="currentColor"></i>
+                                    <div class="absolute top-1 right-1 w-1.5 h-1.5 bg-white border border-pink-500 rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Navigation Menu -->
+                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 w-[85%] bg-[#1E1A25] rounded-xl h-10 flex items-center justify-between px-2 shadow-2xl z-30">
+                            <div class="flex flex-col items-center justify-center w-8 h-full relative text-white">
+                                <i data-lucide="home" width="12" height="12"></i>
+                                <span class="text-[4px] lg:text-[5px] font-bold uppercase mt-1">Hub</span>
+                                <div class="w-2 h-[1.5px] bg-white rounded-full absolute bottom-1"></div>
+                            </div>
+                            <div class="flex flex-col items-center justify-center w-6 h-full text-slate-500">
+                                <i data-lucide="briefcase" width="12" height="12"></i>
+                            </div>
+                            <div class="flex flex-col items-center justify-center w-6 h-full text-slate-500">
+                                <i data-lucide="grid" width="12" height="12"></i>
+                            </div>
+                            <div class="flex flex-col items-center justify-center w-6 h-full text-slate-500">
+                                <i data-lucide="user" width="12" height="12"></i>
+                            </div>
+                            <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-purple-500 to-fuchsia-500 flex items-center justify-center text-white shadow-lg shrink-0 border border-[#1E1A25]">
+                                <i data-lucide="layers" width="10" height="10"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PHONE 1 (LOGIN) - FOREGROUND / RIGHT -->
+                <div class="absolute right-0 lg:-right-4 top-0 w-[260px] h-[520px] lg:w-[300px] lg:h-[600px] bg-[#0f1115] rounded-[2rem] lg:rounded-[2.5rem] border-[6px] lg:border-[8px] border-[#1a1d24] shadow-2xl overflow-hidden z-20 transform rotate-2 hover:rotate-0 transition-all duration-500">
+                    <!-- Notch Foreground Phone -->
+                    <div class="absolute top-0 w-full h-6 z-20 flex justify-center">
+                        <div class="w-28 lg:w-32 h-4 lg:h-5 bg-[#1a1d24] rounded-b-xl"></div>
+                    </div>
+
+                    <!-- Screen UI (Login Original) -->
+                    <div class="w-full h-full bg-[#050505] pt-12 px-5 relative flex flex-col items-center overflow-hidden">
+                        <!-- Subtle background grid/glow -->
+                        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE5LjUgMEwxOS41IDIwTTAgMTkuNUwyMCAxOS41IiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wMikiIGZpbGw9Im5vbmUiLz48L3N2Zz4=')] opacity-50"></div>
+                        
+                        <!-- Top Badge -->
+                        <div class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/5 bg-white/5 mb-8 lg:mb-10 relative z-10">
+                            <div class="w-1.5 h-1.5 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,1)]"></div>
+                            <span class="text-[6.5px] lg:text-[7px] font-black text-white/80 tracking-widest uppercase">Terminal Asegurada</span>
+                        </div>
+                        
+                        <!-- Logo -->
+                        <div class="relative z-10 flex flex-col items-center mb-8 lg:mb-10">
+                            <img src="imagenes/logo.svg" alt="Freework Logo" class="w-14 h-14 lg:w-16 lg:h-16 mb-4 drop-shadow-[0_0_20px_rgba(192,38,211,0.4)] object-contain" onerror="this.src='https://placehold.co/100x100/131620/a855f7?text=Logo'">
+                            <h3 class="text-2xl lg:text-3xl font-black text-white tracking-tighter mb-1">FREEWORK</h3>
+                            <p class="text-[7px] lg:text-[8px] text-fuchsia-400 font-bold tracking-[0.15em] uppercase drop-shadow-[0_0_8px_rgba(192,38,211,0.5)]">Aquí no se llora, se factura</p>
+                        </div>
+
+                        <!-- Inputs -->
+                        <div class="w-full space-y-3 relative z-10">
+                            <div class="w-full h-11 lg:h-12 bg-[#090A0F] border border-white/5 rounded-xl flex items-center justify-between px-4 group focus-within:border-purple-500/30 transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="user" width="14" height="14" class="text-slate-500"></i>
+                                    <span class="text-[10px] lg:text-[11px] text-slate-500">Correo del Socio Comercial</span>
+                                </div>
+                                <i data-lucide="fingerprint" width="16" height="16" class="text-slate-600"></i>
+                            </div>
+                            
+                            <div class="w-full h-11 lg:h-12 bg-[#090A0F] border border-white/5 rounded-xl flex items-center px-4 group focus-within:border-purple-500/30 transition-colors">
+                                <i data-lucide="key" width="14" height="14" class="text-slate-500 mr-3"></i>
+                                <span class="text-[10px] lg:text-[11px] text-slate-500">Contraseña</span>
+                            </div>
+                        </div>
+
+                        <!-- Button -->
+                        <div class="w-full h-12 lg:h-[3.25rem] bg-gradient-to-r from-[#a855f7] to-[#d946ef] rounded-xl mt-6 flex items-center justify-center gap-2 text-white text-[9px] lg:text-[10px] font-black uppercase tracking-widest shadow-[0_0_25px_rgba(217,70,239,0.35)] cursor-pointer hover:shadow-[0_0_35px_rgba(217,70,239,0.5)] transition-all relative z-10">
+                            <i data-lucide="power" width="12" height="12"></i>
+                            Inicializar Sistema
+                        </div>
+
+                        <a href="registro.html" target="_top" class="mt-8 text-[7px] lg:text-[8px] text-slate-500 uppercase tracking-widest font-medium relative z-10 cursor-pointer hover:text-white transition-colors block text-center w-full">¿Primer acceso? Regístrate</a>
+
+                        <!-- Glow bottom -->
+                        <div class="absolute bottom-0 w-full h-32 lg:h-40 bg-gradient-to-t from-fuchsia-900/10 to-transparent pointer-events-none"></div>
+                    </div>
+                </div>
+                
+                <!-- Floating Card (Hidden on very small screens, visible on md+) -->
+                <div class="absolute bottom-10 -right-4 lg:-right-10 bg-[#131620] border border-slate-800 p-4 lg:p-5 rounded-2xl shadow-2xl z-30 animate-bounce-slow hidden md:block">
+                    <div class="flex items-center gap-2 lg:gap-3 mb-2">
+                        <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                        <span class="text-[9px] lg:text-[10px] font-bold text-slate-400 uppercase tracking-wider">Estado de Ventas</span>
+                    </div>
+                    <div class="flex items-center gap-3 lg:gap-4">
+                        <h4 class="text-white font-black text-base lg:text-lg">Comisiones al Día</h4>
+                        <i data-lucide="check-circle-2" class="text-violet-500" width="18" height="18"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CARRUSEL DE APP SECTION (NUEVA UBICACIÓN: Justo debajo del Hero) -->
+    <section class="py-12 bg-slate-50 relative overflow-hidden border-t border-slate-100">
+        <!-- Glow -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl h-[400px] bg-violet-500/10 blur-[80px] -z-10 rounded-full pointer-events-none"></div>
+
+        <!-- Título del carrusel -->
+        <div class="max-w-7xl mx-auto px-6 relative z-10 text-center mb-8">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Desliza para explorar la plataforma</span>
+            <div class="flex justify-center gap-1.5 mt-3">
+                <div class="w-6 h-1.5 rounded-full bg-violet-600"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-slate-300"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-slate-300"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-slate-300"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-slate-300"></div>
+            </div>
+        </div>
+
+        <!-- Contenedor del Carrusel (Con ID para JS y sin snap para scroll suave) -->
+        <div id="app-carousel" class="flex overflow-x-auto gap-4 lg:gap-6 pb-8 pt-4 px-6 lg:px-12 hide-scrollbar items-center justify-start cursor-grab active:cursor-grabbing">
+            
+            <!-- PANTALLA 1: PORTAL COMERCIAL (ESCALADA) -->
+            <div class="relative min-w-[180px] w-[180px] h-[360px] shrink-0 hover:-translate-y-2 transition-transform duration-300">
+                <div class="absolute top-0 left-0 w-[240px] h-[480px] bg-[#0f1115] rounded-[2rem] border-[6px] border-[#1a1d24] shadow-2xl overflow-hidden origin-top-left scale-[0.75] pointer-events-none">
+                    <div class="absolute top-0 w-full h-5 z-20 flex justify-center"><div class="w-20 h-4 bg-[#1a1d24] rounded-b-lg"></div></div>
+                    <div class="w-full h-full bg-[#f4f5f9] relative flex flex-col pointer-events-auto">
+                        <!-- Header Dark -->
+                        <div class="bg-[#10141d] w-full pt-8 pb-6 px-4 relative z-0 rounded-b-[2rem] shadow-md overflow-hidden">
+                            <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:12px_12px]"></div>
+                            <div class="flex justify-between items-center mb-4 relative z-10">
+                                <div class="w-7 h-7 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white backdrop-blur-sm"><i data-lucide="arrow-left" width="14" height="14"></i></div>
+                                <div class="text-center flex flex-col items-center">
+                                    <p class="text-[5px] text-slate-400 font-bold tracking-[0.2em] uppercase leading-none mb-1">Portal Comercial</p>
+                                    <h4 class="text-[12px] font-black text-white leading-none tracking-tight flex items-baseline gap-0.5">FREEWORK<div class="w-1 h-1 bg-emerald-400 rounded-full"></div></h4>
+                                </div>
+                                <div class="w-7 h-7 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white backdrop-blur-sm relative">
+                                    <i data-lucide="bell" width="14" height="14"></i>
+                                    <div class="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-pink-500 rounded-full"></div>
+                                </div>
+                            </div>
+                            <div class="relative z-10 mb-4">
+                                <h3 class="text-[18px] font-black text-white mb-1 tracking-tight leading-none">Hola, sebastian</h3>
+                                <p class="text-[9px] text-slate-400 font-medium">Resumen de tu jornada comercial</p>
+                            </div>
+                            <div class="relative z-10 bg-gradient-to-r from-[#2a1340] to-[#1d0d2e] rounded-xl p-2.5 flex items-center justify-between border border-fuchsia-500/20 shadow-xl shadow-purple-900/40">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-fuchsia-400 to-purple-600 flex items-center justify-center text-white shadow-inner">
+                                        <i data-lucide="zap" width="14" height="14"></i>
+                                    </div>
+                                    <div>
+                                        <div class="bg-emerald-900/40 border border-emerald-500/30 rounded px-1 py-0.5 mb-1 inline-flex items-center gap-1">
+                                            <div class="w-1 h-1 bg-emerald-400 rounded-full"></div>
+                                            <span class="text-[5px] font-black text-emerald-400 uppercase tracking-wider">Mejor Precio</span>
+                                        </div>
+                                        <h5 class="text-[11px] font-black text-white leading-none">WOM Fibra 600</h5>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-[6px] font-bold text-fuchsia-300 uppercase tracking-widest mb-1">Solo Fibra</p>
+                                    <h5 class="text-[12px] font-black text-white leading-none">$13.990</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Body Light -->
+                        <div class="flex-1 px-4 pt-4 relative z-20">
+                            <div class="bg-white rounded-[1rem] p-2.5 flex items-center justify-between shadow-sm mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-[#0047BB] flex items-center justify-center text-white shadow-md shadow-blue-500/20"><i data-lucide="smartphone" width="16" height="16"></i></div>
+                                    <div><h4 class="text-[13px] font-black text-slate-900 mb-0.5 leading-none">Entel</h4><p class="text-[8px] font-bold text-slate-500">Ingresar Solicitud</p></div>
+                                </div>
+                                <div class="w-6 h-6 rounded-full border border-slate-100 flex items-center justify-center text-slate-400 bg-slate-50"><i data-lucide="chevron-right" width="12" height="12"></i></div>
+                            </div>
+                            <div class="bg-white rounded-[1rem] p-2.5 flex items-center justify-between shadow-sm relative">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-[#b722b6] flex items-center justify-center text-white shadow-md shadow-fuchsia-500/20"><i data-lucide="zap" width="16" height="16"></i></div>
+                                    <div><h4 class="text-[13px] font-black text-slate-900 mb-0.5 leading-none">WOM</h4><p class="text-[8px] font-bold text-slate-500">Ingresar Solicitud</p></div>
+                                </div>
+                                <div class="w-6 h-6 rounded-full border border-slate-100 flex items-center justify-center text-slate-400 bg-slate-50"><i data-lucide="chevron-right" width="12" height="12"></i></div>
+                                <div class="absolute -right-2 -bottom-4 w-9 h-9 rounded-full bg-gradient-to-br from-[#f472b6] to-[#c026d3] flex items-center justify-center text-white border-[2px] border-[#f4f5f9] shadow-lg z-30">
+                                    <i data-lucide="map-pin" width="14" height="14" fill="currentColor"></i>
+                                    <div class="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-white border border-pink-500 rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 w-[88%] bg-[#211d2b] rounded-full h-11 flex items-center justify-between px-2.5 shadow-xl z-30 border border-white/5">
+                            <div class="w-6 flex justify-center text-slate-500"><i data-lucide="home" width="14" height="14"></i></div>
+                            <div class="flex flex-col items-center justify-center w-10 h-full relative text-white">
+                                <i data-lucide="briefcase" width="16" height="16"></i>
+                                <span class="text-[5px] font-bold uppercase mt-1 tracking-wider">Ventas</span>
+                                <div class="w-3 h-[2px] bg-white rounded-full absolute bottom-1"></div>
+                            </div>
+                            <div class="w-6 flex justify-center text-slate-500"><i data-lucide="grid" width="14" height="14"></i></div>
+                            <div class="w-6 flex justify-center text-slate-500"><i data-lucide="user" width="14" height="14"></i></div>
+                            <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-purple-500 to-fuchsia-500 flex items-center justify-center text-white shadow-lg shrink-0 border border-[#211d2b]"><i data-lucide="layers" width="12" height="12"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANTALLA 2: PANEL DE GESTIÓN (ESCALADA) -->
+            <div class="relative min-w-[180px] w-[180px] h-[360px] shrink-0 hover:-translate-y-2 transition-transform duration-300">
+                <div class="absolute top-0 left-0 w-[240px] h-[480px] bg-[#0f1115] rounded-[2rem] border-[6px] border-[#1a1d24] shadow-2xl overflow-hidden origin-top-left scale-[0.75] pointer-events-none">
+                    <div class="absolute top-0 w-full h-5 z-20 flex justify-center"><div class="w-20 h-4 bg-[#1a1d24] rounded-b-lg"></div></div>
+                    <div class="w-full h-full bg-[#f4f5f9] relative flex flex-col pointer-events-auto">
+                        <div class="bg-[#120B29] w-full pt-8 pb-4 px-4 relative z-10">
+                            <div class="flex justify-between items-center mb-4">
+                                <div class="w-7 h-7 bg-white/10 rounded-full flex items-center justify-center"><i data-lucide="zap" class="text-fuchsia-500" width="14" height="14"></i></div>
+                                <div class="flex gap-2">
+                                    <div class="w-7 h-7 bg-white/10 rounded-full flex items-center justify-center text-slate-300"><i data-lucide="download" width="12" height="12"></i></div>
+                                    <div class="w-7 h-7 bg-white/10 rounded-full flex items-center justify-center text-slate-300 relative"><i data-lucide="bell" width="12" height="12"></i><div class="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-pink-500 rounded-full"></div></div>
+                                </div>
+                            </div>
+                            <div class="bg-white/5 border border-white/10 rounded-xl h-9 flex items-center px-3 gap-2 text-slate-400">
+                                <i data-lucide="search" width="12" height="12"></i><span class="text-[9px]">Buscar cliente, RUT o ID...</span>
+                            </div>
+                            <div class="flex gap-2 mt-4 overflow-hidden">
+                                <div class="bg-white text-slate-900 px-3 py-1.5 rounded-full text-[9px] font-bold flex items-center gap-1.5">Todos <span class="bg-purple-600 text-white text-[7px] px-1.5 py-0.5 rounded-full">7</span></div>
+                                <div class="bg-white/10 text-slate-300 px-3 py-1.5 rounded-full text-[9px] font-medium flex items-center gap-1.5 border border-white/5">Pre-ingreso <span class="bg-white/10 text-slate-400 text-[7px] px-1.5 py-0.5 rounded-full">0</span></div>
+                            </div>
+                        </div>
+                        <div class="flex-1 px-3 pt-4 overflow-hidden">
+                            <div class="grid grid-cols-2 gap-2 mb-4">
+                                <div class="bg-white p-2.5 rounded-xl border border-slate-100 flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center"><i data-lucide="layers" width="12" height="12"></i></div>
+                                    <div><h4 class="text-[12px] font-black text-slate-800 leading-none mb-0.5">7</h4><p class="text-[6px] font-bold text-slate-400 uppercase tracking-wider">Total</p></div>
+                                </div>
+                                <div class="bg-white p-2.5 rounded-xl border border-slate-100 flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-500 flex items-center justify-center"><i data-lucide="check-circle-2" width="12" height="12"></i></div>
+                                    <div><h4 class="text-[12px] font-black text-slate-800 leading-none mb-0.5">0</h4><p class="text-[6px] font-bold text-slate-400 uppercase tracking-wider">Instalados</p></div>
+                                </div>
+                                <div class="bg-white p-2.5 rounded-xl border border-slate-100 flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-500 flex items-center justify-center"><i data-lucide="truck" width="12" height="12"></i></div>
+                                    <div><h4 class="text-[12px] font-black text-slate-800 leading-none mb-0.5">0</h4><p class="text-[6px] font-bold text-slate-400 uppercase tracking-wider">Despacho</p></div>
+                                </div>
+                                <div class="bg-white p-2.5 rounded-xl border border-slate-100 flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-lg bg-red-100 text-red-500 flex items-center justify-center"><i data-lucide="x-circle" width="12" height="12"></i></div>
+                                    <div><h4 class="text-[12px] font-black text-slate-800 leading-none mb-0.5">0</h4><p class="text-[6px] font-bold text-slate-400 uppercase tracking-wider">Rechazados</p></div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center mb-2 px-1">
+                                <p class="text-[8px] font-medium text-slate-500">Mostrando <span class="font-bold text-slate-800">7</span> ventas</p>
+                                <div class="border border-slate-200 bg-white rounded-full px-2 py-1 flex items-center gap-1 text-[7px] font-bold text-slate-600"><i data-lucide="sliders-horizontal" width="8" height="8"></i> Operador <i data-lucide="chevron-down" width="8" height="8"></i></div>
+                            </div>
+                            <!-- Actualizado nombres a las capturas -->
+                            <div class="bg-white rounded-xl p-3 mb-2 flex items-center gap-3 border border-slate-100">
+                                <div class="w-2 h-2 rounded-full bg-[#b722b6] shrink-0"></div>
+                                <div class="w-8 font-black text-[9px] text-slate-800">WOM</div>
+                                <div class="flex-1">
+                                    <p class="text-[8px] font-bold text-purple-600 mb-0.5 leading-none">#1111111111</p>
+                                    <p class="text-[6px] text-slate-400 font-medium flex items-center gap-0.5"><i data-lucide="calendar" width="6" height="6"></i> 26-02-2026</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-[9px] font-black text-slate-800 mb-0.5 leading-none capitalize">grethel</p>
+                                    <p class="text-[6px] text-slate-400 font-medium">16523125-0</p>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-xl p-3 flex items-center gap-3 border border-slate-100 relative">
+                                <div class="w-2 h-2 rounded-full bg-[#b722b6] shrink-0"></div>
+                                <div class="w-8 font-black text-[9px] text-slate-800">WOM</div>
+                                <div class="flex-1">
+                                    <p class="text-[8px] font-bold text-purple-600 mb-0.5 leading-none">#1111111111</p>
+                                    <p class="text-[6px] text-slate-400 font-medium flex items-center gap-0.5"><i data-lucide="calendar" width="6" height="6"></i> 26-02-2026</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-[9px] font-black text-slate-800 mb-0.5 leading-none capitalize">joaquin leiva</p>
+                                    <p class="text-[6px] text-slate-400 font-medium">16523126-1</p>
+                                </div>
+                                <div class="absolute -right-2 -bottom-2 w-8 h-8 rounded-full bg-gradient-to-br from-[#f472b6] to-[#c026d3] flex items-center justify-center text-white shadow-lg shadow-pink-500/30 z-30">
+                                    <i data-lucide="map-pin" width="12" height="12" fill="currentColor"></i>
+                                    <div class="absolute top-2 right-2 w-1.5 h-1.5 bg-white border border-pink-500 rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 w-[90%] bg-[#211d2b] rounded-[1.2rem] h-12 flex items-center justify-between px-2 shadow-xl z-30">
+                            <div class="w-8 flex justify-center text-slate-500"><i data-lucide="home" width="14" height="14"></i></div>
+                            <div class="w-8 flex justify-center text-slate-500"><i data-lucide="briefcase" width="14" height="14"></i></div>
+                            <div class="flex flex-col items-center justify-center w-12 h-full relative text-white">
+                                <i data-lucide="grid" width="16" height="16"></i>
+                                <span class="text-[5px] font-bold uppercase mt-1 tracking-wider">Panel</span>
+                                <div class="w-3 h-[2px] bg-white rounded-full absolute bottom-1.5"></div>
+                            </div>
+                            <div class="w-8 flex justify-center text-slate-500"><i data-lucide="user" width="14" height="14"></i></div>
+                            <div class="w-8 h-8 rounded-[0.8rem] bg-gradient-to-br from-purple-500 to-fuchsia-500 flex items-center justify-center text-white mr-1"><i data-lucide="layers" width="12" height="12"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANTALLA 3: DETALLE VENTA MODAL (ESCALADA) -->
+            <div class="relative min-w-[180px] w-[180px] h-[360px] shrink-0 hover:-translate-y-2 transition-transform duration-300">
+                <div class="absolute top-0 left-0 w-[240px] h-[480px] bg-[#0f1115] rounded-[2rem] border-[6px] border-[#1a1d24] shadow-2xl overflow-hidden origin-top-left scale-[0.75] pointer-events-none">
+                    <div class="absolute top-0 w-full h-5 z-20 flex justify-center"><div class="w-20 h-4 bg-[#1a1d24] rounded-b-lg"></div></div>
+                    <div class="absolute inset-0 bg-[#120B29] opacity-50"></div>
+                    <div class="w-full h-full relative flex flex-col justify-end pointer-events-auto">
+                        <div class="bg-[#f4f5f9] w-full h-[88%] rounded-t-[1.5rem] flex flex-col pt-3 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] relative">
+                            <div class="bg-[#100a1c] mx-3 rounded-2xl p-4 mb-3 relative overflow-hidden">
+                                <div class="flex justify-between items-center mb-3">
+                                    <div class="flex items-center gap-2">
+                                        <span class="bg-[#e91e63] text-white text-[7px] font-black uppercase px-2 py-0.5 rounded-md">WOM</span>
+                                        <span class="text-[9px] text-slate-300 font-medium">#1111111111</span>
+                                    </div>
+                                    <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-white/70"><i data-lucide="x" width="10" height="10"></i></div>
+                                </div>
+                                <div class="flex justify-between items-end">
+                                    <div>
+                                        <!-- Actualizado al nombre grethel -->
+                                        <h3 class="text-[16px] font-black text-white leading-none mb-1 capitalize">grethel</h3>
+                                        <p class="text-[8px] text-slate-400">16523125-0 <span class="mx-1">|</span> ID: #1111111111</p>
+                                    </div>
+                                    <div class="bg-amber-100 text-amber-700 text-[6px] font-black uppercase px-2 py-1 rounded border border-amber-200">Pendiente</div>
+                                </div>
+                            </div>
+                            <div class="px-3 flex-1 overflow-y-auto hide-scrollbar pb-20 space-y-2.5">
+                                <div class="bg-white rounded-xl p-2.5 flex items-center gap-3 border border-slate-100">
+                                    <div class="w-9 h-9 rounded-lg bg-indigo-500 text-white font-bold text-[11px] flex items-center justify-center">SL</div>
+                                    <div>
+                                        <p class="text-[6px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Ejecutivo a cargo</p>
+                                        <!-- Actualizado al nombre sebastian -->
+                                        <h4 class="text-[11px] font-black text-slate-800 leading-none mb-0.5 capitalize">sebastian leiva</h4>
+                                        <p class="text-[7px] text-slate-400">Supervisor: Sin Asignar</p>
+                                    </div>
+                                </div>
+                                <div class="bg-indigo-50/50 rounded-xl p-2.5 flex items-center gap-3 border border-indigo-100">
+                                    <div class="w-7 h-7 rounded-full bg-indigo-500 text-white flex items-center justify-center"><i data-lucide="wifi" width="12" height="12"></i></div>
+                                    <div><p class="text-[6px] font-bold text-indigo-500 uppercase tracking-widest mb-0.5">Plan Contratado</p><h4 class="text-[12px] font-black text-slate-800 leading-none">800 Megas</h4></div>
+                                </div>
+                                <div class="bg-slate-50 rounded-xl p-2.5 flex items-center gap-3 border border-slate-100">
+                                    <div class="w-7 h-7 rounded-full bg-red-100 text-red-500 flex items-center justify-center"><i data-lucide="map-pin" width="12" height="12"></i></div>
+                                    <div><p class="text-[6px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Dirección / Comuna</p><h4 class="text-[10px] font-semibold text-slate-800 leading-tight">independencia 21, Maipú</h4></div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div class="bg-slate-50 rounded-xl p-2.5 flex items-center gap-2 border border-slate-100">
+                                        <div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-500 flex items-center justify-center shrink-0"><i data-lucide="phone" width="10" height="10"></i></div>
+                                        <div><p class="text-[5px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Teléfono</p><h4 class="text-[9px] font-semibold text-slate-800 leading-none">944730669</h4></div>
+                                    </div>
+                                    <div class="bg-blue-50/50 rounded-xl p-2.5 flex items-center gap-2 border border-blue-100">
+                                        <div class="w-6 h-6 rounded-md bg-blue-100 text-blue-500 flex items-center justify-center shrink-0"><i data-lucide="calendar" width="10" height="10"></i></div>
+                                        <div><p class="text-[5px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Ingreso</p><h4 class="text-[9px] font-semibold text-slate-800 leading-none">26-02-2026</h4></div>
+                                    </div>
+                                </div>
+                                <div class="bg-amber-50/30 rounded-xl p-2.5 border border-dashed border-amber-300">
+                                    <p class="text-[6px] font-bold text-amber-600 uppercase tracking-widest mb-1.5 flex items-center gap-1"><i data-lucide="message-square" width="8" height="8"></i> Notas de Backoffice</p>
+                                    <p class="text-[9px] font-medium text-amber-800 leading-relaxed uppercase">CLIENTE NO CONTESTA</p>
+                                </div>
+                            </div>
+                            <div class="absolute right-4 bottom-14 w-10 h-10 rounded-full bg-[#e91e63] flex items-center justify-center text-white shadow-[0_4px_15px_rgba(233,30,99,0.5)] z-40">
+                                <i data-lucide="map-pin" width="14" height="14" fill="currentColor"></i><div class="absolute top-2 right-2.5 w-1.5 h-1.5 bg-white border border-[#e91e63] rounded-full"></div>
+                            </div>
+                            <div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-[90%] bg-[#211d2b] rounded-[1.2rem] h-12 flex items-center justify-between px-2 shadow-2xl z-30 opacity-95">
+                                <div class="w-8 flex justify-center text-slate-500"><i data-lucide="home" width="14" height="14"></i></div>
+                                <div class="w-8 flex justify-center text-slate-500"><i data-lucide="briefcase" width="14" height="14"></i></div>
+                                <div class="flex flex-col items-center justify-center w-12 h-full relative text-white">
+                                    <i data-lucide="grid" width="16" height="16"></i>
+                                    <span class="text-[5px] font-bold uppercase mt-1 tracking-wider">Panel</span>
+                                    <div class="w-3 h-[2px] bg-white rounded-full absolute bottom-1.5"></div>
+                                </div>
+                                <div class="w-8 flex justify-center text-slate-500"><i data-lucide="user" width="14" height="14"></i></div>
+                                <div class="w-8 h-8 rounded-[0.8rem] bg-gradient-to-br from-purple-500 to-fuchsia-500 flex items-center justify-center text-white mr-1"><i data-lucide="layers" width="12" height="12"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANTALLA 4: ASISTENTE IA (ESCALADA) -->
+            <div class="relative min-w-[180px] w-[180px] h-[360px] shrink-0 hover:-translate-y-2 transition-transform duration-300">
+                <div class="absolute top-0 left-0 w-[240px] h-[480px] bg-[#0f1115] rounded-[2rem] border-[6px] border-[#1a1d24] shadow-2xl overflow-hidden origin-top-left scale-[0.75] pointer-events-none">
+                    <div class="absolute top-0 w-full h-5 z-20 flex justify-center"><div class="w-20 h-4 bg-[#1a1d24] rounded-b-lg"></div></div>
+                    <div class="w-full h-full bg-[#f4f5f9] relative flex flex-col overflow-hidden pointer-events-auto">
+                        <div class="absolute inset-0 filter blur-[2px] pointer-events-none">
+                            <div class="bg-[#110D17] w-full pt-10 pb-4 px-4 rounded-b-[1.5rem] flex items-center gap-2">
+                                <div class="w-8 h-8 bg-[#9333ea] rounded-xl flex items-center justify-center text-white font-black">S</div>
+                                <div><p class="text-[6px] text-fuchsia-400 font-bold uppercase mb-0.5">Ejecutivo Elite</p><h3 class="text-[15px] font-black text-white">Hola, sebastian</h3></div>
+                            </div>
+                            <div class="px-3 pt-3 space-y-3">
+                                <div class="bg-white rounded-[1.2rem] p-3 h-16 shadow-sm"></div>
+                                <div class="bg-[#291854] rounded-[1.2rem] p-3 h-20 shadow-lg"></div>
+                                <div class="bg-white/40 border border-dashed border-slate-300 rounded-[1.2rem] h-16"></div>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 bg-black/50 z-20 backdrop-blur-[1px]"></div>
+                        <div class="absolute inset-0 z-30 flex flex-col items-end justify-center pr-5 space-y-3 pb-20">
+                            <div class="w-10 h-10 rounded-full bg-[#1b1725] text-slate-300 border border-white/10 flex items-center justify-center shadow-xl hover:bg-white/10 transition-colors"><i data-lucide="home" width="16" height="16"></i></div>
+                            <div class="flex items-center gap-3">
+                                <div class="bg-gradient-to-r from-purple-500 to-fuchsia-500 rounded-full px-4 py-2.5 flex items-center gap-2 shadow-lg shadow-purple-500/30">
+                                    <div class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
+                                    <span class="text-white text-[11px] font-bold">Asistente IA</span>
+                                    <i data-lucide="message-square" width="12" height="12" class="text-white ml-1"></i>
+                                </div>
+                                <div class="w-10 h-10 rounded-full bg-[#1b1725] text-slate-300 border border-white/10 flex items-center justify-center shadow-xl hover:bg-white/10 transition-colors"><i data-lucide="briefcase" width="16" height="16"></i></div>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-[#1b1725] text-slate-300 border border-white/10 flex items-center justify-center shadow-xl hover:bg-white/10 transition-colors"><i data-lucide="star" width="16" height="16"></i></div>
+                            <div class="w-10 h-10 rounded-full bg-[#1b1725] text-[#d946ef] border border-[#d946ef]/30 flex items-center justify-center shadow-xl relative overflow-hidden">
+                                <div class="absolute inset-0 bg-[#d946ef]/10"></div><i data-lucide="map-pin" width="16" height="16" fill="currentColor"></i>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 w-[85%] bg-[#1E1A25] rounded-xl h-10 flex items-center justify-between px-2 shadow-2xl z-10 filter blur-[1px]">
+                            <div class="w-6 h-6"></div><div class="w-6 h-6"></div><div class="w-6 h-6"></div><div class="w-6 h-6"></div><div class="w-7 h-7 rounded-lg bg-fuchsia-500"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANTALLA 5: PLATAFORMA WOM PLANES (ESCALADA) -->
+            <div class="relative min-w-[180px] w-[180px] h-[360px] shrink-0 hover:-translate-y-2 transition-transform duration-300">
+                <div class="absolute top-0 left-0 w-[240px] h-[480px] bg-[#0f1115] rounded-[2rem] border-[6px] border-[#1a1d24] shadow-2xl overflow-hidden origin-top-left scale-[0.75] pointer-events-none">
+                    <div class="absolute top-0 w-full h-5 z-20 flex justify-center"><div class="w-20 h-4 bg-[#1a1d24] rounded-b-lg"></div></div>
+                    <div class="w-full h-full bg-[#f8f9fc] relative flex flex-col pointer-events-auto">
+                        <div class="bg-white w-full pt-8 pb-3 px-4 border-b border-slate-100 flex items-center justify-between relative z-10 shadow-sm">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-lg bg-[#b722b6] flex items-center justify-center text-white shadow-md shadow-fuchsia-500/20"><i data-lucide="zap" width="14" height="14"></i></div>
+                                <div><p class="text-[6px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-0.5">Plataforma</p><h3 class="text-[14px] font-black text-slate-800 leading-none">WOM</h3></div>
+                            </div>
+                            <div class="w-7 h-7 rounded-lg border border-slate-200 text-slate-400 flex items-center justify-center bg-slate-50"><i data-lucide="x" width="12" height="12"></i></div>
+                        </div>
+                        <div class="flex-1 px-4 pt-4 overflow-y-auto hide-scrollbar pb-20">
+                            <h4 class="text-[8px] font-black text-slate-400 uppercase tracking-widest text-center mb-3">Tipo de Servicio</h4>
+                            <div class="grid grid-cols-2 gap-3 mb-6">
+                                <div class="bg-white border-2 border-[#e91e63] rounded-xl p-3 flex flex-col items-center justify-center gap-1.5 shadow-sm shadow-pink-500/10 relative overflow-hidden">
+                                    <div class="absolute top-0 w-full h-1 bg-[#e91e63]"></div><i data-lucide="wifi" class="text-[#e91e63]" width="18" height="18"></i><span class="text-[8px] font-black text-[#e91e63] uppercase">Solo Internet</span>
+                                </div>
+                                <div class="bg-white border border-slate-200 rounded-xl p-3 flex flex-col items-center justify-center gap-1.5 shadow-sm"><i data-lucide="tv" class="text-slate-400" width="18" height="18"></i><span class="text-[8px] font-bold text-slate-500 uppercase">Internet + TV</span></div>
+                            </div>
+                            <div class="flex justify-center mb-2">
+                                <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-[#b722b6] to-[#e91e63] flex items-center justify-center text-white shadow-lg shadow-pink-500/20 -mt-2"><i data-lucide="trending-up" width="14" height="14"></i></div>
+                            </div>
+                            <h4 class="text-[8px] font-black text-slate-400 uppercase tracking-widest text-center mb-3">Selecciona Plan</h4>
+                            <div class="space-y-3">
+                                <div class="bg-white border-2 border-[#e91e63] rounded-xl p-3 flex justify-between items-center shadow-sm shadow-pink-500/10">
+                                    <div><h4 class="text-[14px] font-black text-slate-800 leading-none mb-1">600 Megas</h4><p class="text-[8px] font-medium text-slate-400">Fibra Simétrica</p></div>
+                                    <div class="text-right"><h4 class="text-[14px] font-black text-[#e91e63] leading-none mb-1">$13.990</h4><p class="text-[7px] font-medium text-slate-300 line-through">$21.990</p></div>
+                                </div>
+                                <div class="bg-white border border-slate-100 rounded-xl p-3 flex justify-between items-center shadow-sm">
+                                    <div><h4 class="text-[14px] font-black text-slate-800 leading-none mb-1">800 Megas</h4><p class="text-[8px] font-medium text-slate-400">Fibra Simétrica</p></div>
+                                    <div class="text-right"><h4 class="text-[14px] font-black text-[#e91e63] leading-none mb-1">$15.990</h4><p class="text-[7px] font-medium text-slate-300 line-through">$24.990</p></div>
+                                </div>
+                                <div class="bg-white border border-slate-100 rounded-xl p-3 flex justify-between items-center shadow-sm">
+                                    <div><h4 class="text-[14px] font-black text-slate-800 leading-none mb-1">940 Megas</h4><p class="text-[8px] font-medium text-slate-400">Fibra Simétrica</p></div>
+                                    <div class="text-right"><h4 class="text-[14px] font-black text-[#e91e63] leading-none mb-1">$16.990</h4><p class="text-[7px] font-medium text-slate-300 line-through">$33.990</p></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute right-3 bottom-16 w-10 h-10 rounded-full bg-[#f472b6] flex items-center justify-center text-white shadow-[0_4px_15px_rgba(244,114,182,0.5)] z-40">
+                            <i data-lucide="map-pin" width="14" height="14" fill="currentColor"></i><div class="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-white rounded-full"></div>
+                        </div>
+                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 w-[90%] bg-[#211d2b] rounded-[1.2rem] h-12 flex items-center justify-between px-2 shadow-xl z-30">
+                            <div class="w-8 flex justify-center text-slate-500"><i data-lucide="home" width="14" height="14"></i></div>
+                            <div class="flex flex-col items-center justify-center w-12 h-full relative text-white">
+                                <i data-lucide="briefcase" width="16" height="16"></i><span class="text-[5px] font-bold uppercase mt-1 tracking-wider">Ventas</span><div class="w-3 h-[2px] bg-white rounded-full absolute bottom-1.5"></div>
+                            </div>
+                            <div class="w-8 flex justify-center text-slate-500"><i data-lucide="grid" width="14" height="14"></i></div>
+                            <div class="w-8 flex justify-center text-slate-500"><i data-lucide="user" width="14" height="14"></i></div>
+                            <div class="w-8 h-8 rounded-[0.8rem] bg-gradient-to-br from-purple-500 to-fuchsia-500 flex items-center justify-center text-white mr-1"><i data-lucide="layers" width="12" height="12"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+    </section>
+
+    <!-- Partners Section -->
+    <section class="py-10 border-y border-slate-100 bg-slate-50/50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] md:w-48">
+                    Vende con el respaldo de
+                </span>
+                <div class="flex-1 flex flex-wrap justify-center md:justify-end items-center gap-8 md:gap-20 opacity-40 hover:opacity-100 transition-opacity duration-500 grayscale">
+                    <h3 class="text-2xl font-black italic text-slate-800">entel</h3>
+                    <h3 class="text-3xl font-black text-slate-800 tracking-tighter">WOM</h3>
+                    <h3 class="text-xl font-bold text-slate-800 uppercase tracking-[0.2em]">Movistar</h3>
+                    <h3 class="text-2xl font-serif font-bold text-slate-800 italic">Claro-VTR</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Value Proposition -->
+    <section id="beneficios" class="py-16 lg:py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-3 gap-12 lg:gap-16">
+                <!-- Title Block -->
+                <div class="lg:col-span-1 text-center lg:text-left">
+                    <h2 class="text-3xl lg:text-4xl font-black text-slate-900 mb-6 leading-tight">Todo lo que un <br /> vendedor necesita.</h2>
+                    <p class="text-base text-slate-500 mb-8 leading-relaxed">
+                        Sabemos que tu tiempo es dinero. Freework te ofrece la infraestructura para que vendas más y pierdas menos tiempo en trámites.
+                    </p>
+                    <div class="w-16 h-1 bg-violet-600 rounded-full mx-auto lg:mx-0"></div>
+                </div>
+
+                <!-- Feature Grid -->
+                <div class="lg:col-span-2 grid md:grid-cols-2 gap-6">
+                    <!-- Feature 1 -->
+                    <div class="p-8 rounded-[2rem] bg-[#0B0F19] border border-slate-800 hover:-translate-y-1 transition-all duration-300 group shadow-xl shadow-slate-200">
+                        <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-6 shadow-inner border border-white/5 group-hover:scale-110 transition-transform text-fuchsia-400">
+                            <i data-lucide="clock" width="24" height="24"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-3">Vende con Libertad</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed font-medium">Maneja tus horarios y tu cartera de clientes. Sin jefes ni horarios.</p>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="p-8 rounded-[2rem] bg-[#0B0F19] border border-slate-800 hover:-translate-y-1 transition-all duration-300 group shadow-xl shadow-slate-200">
+                        <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-6 shadow-inner border border-white/5 group-hover:scale-110 transition-transform text-violet-400">
+                            <i data-lucide="wallet" width="24" height="24"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-3">Comisiones Claras</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed font-medium">Sin sorpresas. Visualiza cuánto ganas por cada venta y recibe pagos puntuales.</p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="p-8 rounded-[2rem] bg-[#0B0F19] border border-slate-800 hover:-translate-y-1 transition-all duration-300 group shadow-xl shadow-slate-200">
+                        <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-6 shadow-inner border border-white/5 group-hover:scale-110 transition-transform text-violet-400">
+                            <i data-lucide="users" width="24" height="24"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-3">Comunidad de Ventas</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed font-medium">Únete a otros vendedores de alto rendimiento y comparte las mejores prácticas.</p>
+                    </div>
+
+                    <!-- Feature 4 -->
+                    <div class="p-8 rounded-[2rem] bg-[#0B0F19] border border-slate-800 hover:-translate-y-1 transition-all duration-300 group shadow-xl shadow-slate-200">
+                        <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-6 shadow-inner border border-white/5 group-hover:scale-110 transition-transform text-fuchsia-400">
+                            <i data-lucide="file-check" width="24" height="24"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-3">Gestión de Solicitudes</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed font-medium">Seguimiento detallado del estado de cada venta ingresada hasta su facturación.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Spotlight -->
+    <section id="app" class="py-16 lg:py-32 relative overflow-hidden bg-slate-50">
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-16 lg:mb-20">
+                <span class="text-violet-600 font-black tracking-widest uppercase text-[10px] mb-4 block">Tecnología de Ventas</span>
+                <h2 class="text-3xl lg:text-5xl font-black text-slate-900 mb-6 tracking-tight">Menos papeleo, <br /> más ventas.</h2>
+                <p class="text-slate-500 text-lg">
+                    Nuestra herramienta de <strong>Ingreso Express</strong> agiliza tu cierre de ventas diario.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Tech Card 1 -->
+                <div class="relative group overflow-hidden rounded-3xl bg-[#131620] border border-slate-800 p-8 hover:-translate-y-2 transition-transform duration-300 shadow-2xl">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-violet-500 to-violet-700 blur-[60px] opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mb-6 text-white font-bold">1</div>
+                        <h3 class="text-xl font-bold text-white mb-2">Factibilidad en Segundos</h3>
+                        <p class="text-sm text-slate-400">Valida la cobertura técnica al instante frente al cliente.</p>
+                    </div>
+                </div>
+
+                <!-- Tech Card 2 -->
+                <div class="relative group overflow-hidden rounded-3xl bg-[#131620] border border-slate-800 p-8 hover:-translate-y-2 transition-transform duration-300 shadow-2xl">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-fuchsia-500 to-pink-600 blur-[60px] opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mb-6 text-white font-bold">2</div>
+                        <h3 class="text-xl font-bold text-white mb-2">Carga Rápida</h3>
+                        <p class="text-sm text-slate-400">Ingresa la venta desde tu celular de forma segura.</p>
+                    </div>
+                </div>
+
+                <!-- Tech Card 3 -->
+                <div class="relative group overflow-hidden rounded-3xl bg-[#131620] border border-slate-800 p-8 hover:-translate-y-2 transition-transform duration-300 shadow-2xl">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-500 to-blue-600 blur-[60px] opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mb-6 text-white font-bold">3</div>
+                        <h3 class="text-xl font-bold text-white mb-2">Liquidaciones Claras</h3>
+                        <p class="text-sm text-slate-400">Detalle transparente de cada comisión generada.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Capacitación y Consultoría -->
+    <section class="py-16 lg:py-24 bg-white relative border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-fuchsia-50 border border-fuchsia-100 mb-5 shadow-sm">
+                    <i data-lucide="graduation-cap" class="text-fuchsia-600" width="14" height="14"></i>
+                    <span class="text-[10px] font-bold text-fuchsia-600 uppercase tracking-widest">Academia y Consultoría</span>
+                </div>
+                <h2 class="text-3xl lg:text-5xl font-black text-slate-900 mb-6 tracking-tight">Llevamos tu talento <br/> al máximo nivel.</h2>
+                <p class="text-slate-500 text-lg">
+                    No solo te damos la infraestructura, también te enseñamos a dominarla. Formación integral diseñada para profesionales y empresas.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="p-8 rounded-[2rem] bg-white border border-slate-100 shadow-xl shadow-slate-200/40 hover:-translate-y-2 transition-all duration-300 group">
+                    <div class="w-14 h-14 rounded-2xl bg-violet-50 text-violet-600 flex items-center justify-center mb-6 group-hover:bg-violet-600 group-hover:text-white transition-colors duration-300">
+                        <i data-lucide="users" width="28" height="28"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Capacitación a Vendedores</h3>
+                    <p class="text-slate-500 leading-relaxed font-medium">Técnicas de cierre, persuasión y manejo de objeciones para que domines el arte de vender y multipliques tus comisiones.</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="p-8 rounded-[2rem] bg-white border border-slate-100 shadow-xl shadow-slate-200/40 hover:-translate-y-2 transition-all duration-300 group">
+                    <div class="w-14 h-14 rounded-2xl bg-fuchsia-50 text-fuchsia-600 flex items-center justify-center mb-6 group-hover:bg-fuchsia-600 group-hover:text-white transition-colors duration-300">
+                        <i data-lucide="crosshair" width="28" height="28"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Formación de Supervisores</h3>
+                    <p class="text-slate-500 leading-relaxed font-medium">Desarrollamos líderes con las herramientas exactas para motivar, gestionar métricas y escalar equipos de alto rendimiento.</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="p-8 rounded-[2rem] bg-white border border-slate-100 shadow-xl shadow-slate-200/40 hover:-translate-y-2 transition-all duration-300 group">
+                    <div class="w-14 h-14 rounded-2xl bg-slate-900 text-white flex items-center justify-center mb-6 group-hover:brand-gradient transition-all duration-300 shadow-lg shadow-slate-900/20">
+                        <i data-lucide="trending-up" width="28" height="28"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Coaching y Consultoría</h3>
+                    <p class="text-slate-500 leading-relaxed font-medium">Asesoría estratégica empresarial. Diagnosticamos y optimizamos tus procesos comerciales para garantizar resultados medibles.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección para Empresas (Secondary CTA) -->
+    <!-- Se agregó el ID "empresas" para que el botón de arriba redirija aquí -->
+    <section id="empresas" class="py-12 lg:py-20 bg-white relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <!-- Contenedor Vibrante (Alto Contraste) -->
+            <div class="brand-gradient rounded-[2.5rem] p-8 lg:p-14 flex flex-col lg:flex-row items-center gap-10 lg:gap-16 relative overflow-hidden shadow-2xl shadow-violet-500/30 group">
+                
+                <!-- Decoración de fondo dinámica -->
+                <div class="absolute inset-0 bg-black/10 mix-blend-overlay pointer-events-none"></div>
+                <div class="absolute -right-32 -top-32 w-96 h-96 bg-white/20 rounded-full blur-[80px] group-hover:bg-white/30 transition-colors duration-700 pointer-events-none"></div>
+                <div class="absolute -left-32 -bottom-32 w-96 h-96 bg-fuchsia-300/30 rounded-full blur-[80px] pointer-events-none"></div>
+                
+                <div class="lg:w-2/3 relative z-10 text-center lg:text-left">
+                    <!-- Badge Premium -->
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 mb-6 shadow-sm backdrop-blur-sm">
+                        <i data-lucide="building-2" class="text-white" width="16" height="16"></i>
+                        <span class="text-[11px] font-black text-white uppercase tracking-widest">Para Empresas</span>
+                    </div>
+                    
+                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-6 tracking-tight leading-tight">
+                        Multiplica tus ventas con <br class="hidden md:block"/>los mejores talentos.
+                    </h2>
+                    <p class="text-violet-50 text-base md:text-lg leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium">
+                        ¿Buscas externalizar o potenciar tu fuerza de ventas? Contamos con una red de <strong>vendedores freelance dispuestos a ser dirigidos</strong> y alineados con tus estrategias comerciales. Conecta con ejecutivos listos para vender bajo un modelo personalizado y transparente.
+                    </p>
+                </div>
+
+                <div class="lg:w-1/3 relative z-10 w-full flex justify-center lg:justify-end">
+                    <!-- Botón de redirección a empresa.html (Blanco para resaltar) -->
+                    <a href="empresa.html" target="_top" class="group flex items-center justify-center gap-3 px-8 h-16 bg-white text-violet-700 rounded-2xl font-black text-sm sm:text-base hover:bg-slate-50 hover:scale-105 transition-all shadow-xl shadow-violet-900/40 w-full sm:w-auto">
+                        <span>Ver soluciones para empresas</span>
+                        <i data-lucide="arrow-right" width="20" height="20" class="group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="py-16 lg:py-24 px-6 bg-white">
+        <div class="max-w-5xl mx-auto relative rounded-[3rem] overflow-hidden shadow-2xl shadow-violet-200">
+            <div class="absolute inset-0 bg-[#0B0F19]">
+                <div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_#4c1d9566_0%,_#0B0F19_70%)]"></div>
+            </div>
+            
+            <div class="relative z-10 px-6 py-16 lg:py-32 text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl lg:text-6xl font-black text-white mb-8 tracking-tighter leading-none">
+                    Lleva tus ventas <br/> al siguiente nivel.
+                </h2>
+                <p class="text-slate-400 text-lg mb-12 max-w-lg mx-auto leading-relaxed">
+                    Únete a los vendedores que ya facturan con el respaldo de Freework. Tecnología de punta para quienes viven de las ventas.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <!-- BOTÓN DE REGISTRO PREMIUM FINAL CTA -->
+                    <a href="registro.html" target="_top" class="btn-action-premium no-tap-highlight items-center justify-center text-white rounded-2xl font-bold text-base sm:text-lg tracking-tight border-none box-border px-10 w-full sm:w-auto h-16">
+                        <div class="mr-3 bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-md p-2 rounded-xl flex items-center justify-center border border-white/10 shrink-0 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] relative z-10">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <line x1="19" y1="8" x2="19" y2="14"/>
+                                <line x1="16" y1="11" x2="22" y2="11"/>
+                            </svg>
+                        </div>
+                        <span class="whitespace-nowrap drop-shadow-sm relative z-10">Registro FreeWork</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white pt-20 pb-10 border-t border-slate-100">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center pt-8">
+                <div class="flex items-center gap-2 mb-4 md:mb-0">
+                    <div class="w-6 h-6 brand-gradient rounded flex items-center justify-center text-white">
+                        <i data-lucide="zap" width="12" height="12" fill="white"></i>
+                    </div>
+                    <span class="text-xs font-bold text-slate-900 uppercase tracking-widest">Freework SpA</span>
+                </div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    © 2024. Santiago, Chile.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Initialize Icons & Auto-Scroll Logic -->
+    <script>
+        lucide.createIcons();
+
+        // Lógica Optimizada para Autoscroll Infinito (Compatible con Canvas)
+        (function initCarousel() {
+            const carousel = document.getElementById('app-carousel');
+            if (!carousel) return;
+
+            // 1. Clonar los elementos para hacer el efecto infinito (Marquesina)
+            const items = Array.from(carousel.children);
+            items.forEach(item => {
+                const clone = item.cloneNode(true);
+                carousel.appendChild(clone);
+            });
+
+            carousel.style.scrollBehavior = 'auto';
+
+            let isDown = false;
+            let startX;
+            let scrollLeftPos;
+            let isAutoScrolling = true;
+            let currentScroll = 0; // Guardamos la posición exacta aquí
+
+            // 2. Bucle de animación super suave (60fps)
+            function autoScroll() {
+                if (isAutoScrolling && !isDown) {
+                    currentScroll += 1; // Velocidad del carrusel (puedes cambiar a 1.5 o 2)
+                    
+                    // Reseteo invisible al llegar a la mitad
+                    if (currentScroll >= carousel.scrollWidth / 2) {
+                        currentScroll = 0;
+                    }
+                    carousel.scrollLeft = currentScroll;
+                } else {
+                    // Sincronizar si el usuario movió el carrusel con la mano/mouse
+                    currentScroll = carousel.scrollLeft;
+                }
+                requestAnimationFrame(autoScroll);
+            }
+            
+            // 3. Pequeño retraso para asegurar carga en Canvas antes de mover
+            setTimeout(() => {
+                requestAnimationFrame(autoScroll);
+            }, 500);
+
+            // 4. Pausar cuando el usuario interactúa (Ratón)
+            carousel.addEventListener('mouseenter', () => isAutoScrolling = false);
+            carousel.addEventListener('mouseleave', () => { if(!isDown) isAutoScrolling = true; });
+            
+            // Pausar cuando el usuario interactúa (Táctil)
+            carousel.addEventListener('touchstart', () => isAutoScrolling = false);
+            carousel.addEventListener('touchend', () => { 
+                setTimeout(() => { if(!isDown) isAutoScrolling = true; }, 1000); 
+            });
+
+            // 5. Scroll manual arrastrando (Estilo App Nativa)
+            carousel.addEventListener('mousedown', (e) => {
+                isDown = true;
+                isAutoScrolling = false;
+                startX = e.pageX - carousel.offsetLeft;
+                scrollLeftPos = carousel.scrollLeft;
+            });
+            carousel.addEventListener('mouseup', () => {
+                isDown = false;
+                isAutoScrolling = true;
+            });
+            carousel.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - carousel.offsetLeft;
+                const walk = (x - startX) * 2; // Multiplicador de velocidad de arrastre
+                carousel.scrollLeft = scrollLeftPos - walk;
+                currentScroll = carousel.scrollLeft;
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Freework - Blog y Novedades</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            -webkit-user-select: none; 
+            -moz-user-select: none; 
+            -ms-user-select: none; 
+            user-select: none; 
+            -webkit-touch-callout: none;
+        }
+        html { scroll-behavior: smooth; }
+        html, body { overflow-x: hidden; width: 100%; }
+
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up { animation: fade-in-up 0.8s ease-out forwards; }
+
+        /* Estilos Corporativos */
+        .brand-gradient { background-image: linear-gradient(to right, #7c3aed, #c026d3); }
+        .text-gradient {
+            background-clip: text; -webkit-background-clip: text; color: transparent;
+            background-image: linear-gradient(to right, #7c3aed, #c026d3);
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .article-card:hover .article-img { transform: scale(1.05); }
+
+        /* Estilos del Modal */
+        #article-modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        #article-modal.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #article-modal:not(.hidden) {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+        .modal-content-area {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(50px) scale(0.95);
+        }
+        #article-modal:not(.hidden) .modal-content-area {
+            transform: translateY(0) scale(1);
+        }
+        
+        /* Tipografía del artículo dentro del modal */
+        .prose p { margin-bottom: 1.5em; line-height: 1.8; color: #475569; }
+        .prose h3 { font-size: 1.5rem; font-weight: 900; margin-top: 2em; margin-bottom: 1em; color: #0f172a; }
+        .prose ul { margin-bottom: 1.5em; padding-left: 1.5em; list-style-type: disc; color: #475569; }
+        .prose li { margin-bottom: 0.5em; }
+        .prose strong { color: #1e293b; font-weight: 700; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased select-none" oncontextmenu="return false;" oncopy="return false;" oncut="return false;" onpaste="return false;" ondragstart="return false;">
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-24 lg:pt-48 lg:pb-36 overflow-hidden bg-[#0B0F19]">
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-violet-600/20 rounded-full blur-[120px] -translate-y-1/3 translate-x-1/3 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-fuchsia-600/20 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4 pointer-events-none"></div>
+
+        <div class="max-w-5xl mx-auto px-6 text-center relative z-10">
+            <div class="animate-fade-in-up">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel mb-8">
+                    <i data-lucide="book-open" class="text-fuchsia-400 w-4 h-4"></i>
+                    <span class="text-[11px] font-black text-white tracking-widest uppercase">Insights & Novedades</span>
+                </div>
+                
+                <h1 class="text-4xl md:text-6xl lg:text-[72px] font-black text-white tracking-tighter mb-8 leading-[1.1]">
+                    Conocimiento que <br class="hidden md:block"/>
+                    <span class="text-gradient">impulsa tus ventas.</span>
+                </h1>
+                
+                <p class="text-lg md:text-xl text-slate-400 mb-0 leading-relaxed font-medium max-w-3xl mx-auto">
+                    Estrategias de mercado, inteligencia artificial aplicada, técnicas de cierre y consejos de liderazgo para mantener a tu equipo en la vanguardia comercial.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contenedor Principal del Blog -->
+    <section class="py-16 lg:py-24 bg-slate-50 relative -mt-10 rounded-t-[3rem] z-20 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-6">
+            
+            <!-- Menú de Categorías -->
+            <div class="flex flex-wrap items-center justify-center gap-3 mb-16 animate-fade-in-up" style="animation-delay: 0.1s;">
+                <button class="px-5 py-2.5 rounded-full bg-slate-900 text-white text-sm font-bold shadow-md hover:scale-105 transition-transform">Todos</button>
+                <button class="px-5 py-2.5 rounded-full bg-white border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-100 transition-colors shadow-sm">Tecnología & IA</button>
+                <button class="px-5 py-2.5 rounded-full bg-white border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-100 transition-colors shadow-sm">Estrategia B2B</button>
+                <button class="px-5 py-2.5 rounded-full bg-white border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-100 transition-colors shadow-sm">Capacitación</button>
+            </div>
+
+            <!-- Artículo Destacado (Hero Post) -->
+            <div class="mb-20 animate-fade-in-up" style="animation-delay: 0.2s;" onclick="openArticle('hero')">
+                <div class="group relative bg-white rounded-[2.5rem] border border-slate-200 shadow-xl overflow-hidden grid lg:grid-cols-2 cursor-pointer hover:border-violet-300 hover:shadow-2xl hover:shadow-violet-200 transition-all article-card">
+                    <div class="relative h-64 lg:h-auto overflow-hidden bg-slate-100">
+                        <div class="absolute inset-0 bg-gradient-to-br from-violet-500 to-fuchsia-600 opacity-90 transition-transform duration-700 article-img"></div>
+                        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#fff 2px, transparent 2px); background-size: 30px 30px;"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i data-lucide="bot" class="w-24 h-24 text-white opacity-50"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="p-8 lg:p-12 flex flex-col justify-center">
+                        <div class="flex items-center gap-4 mb-6">
+                            <span class="px-3 py-1 rounded-full bg-violet-100 text-violet-700 text-xs font-bold uppercase tracking-wider">Destacado</span>
+                            <span class="text-sm font-medium text-slate-400">Hace 2 días</span>
+                        </div>
+                        <h2 class="text-3xl lg:text-4xl font-black text-slate-900 mb-6 tracking-tight leading-tight group-hover:text-violet-600 transition-colors">
+                            Cómo la Inteligencia Artificial está redefiniendo el cierre de ventas B2B.
+                        </h2>
+                        <p class="text-slate-500 text-lg leading-relaxed mb-8">
+                            Descubre cómo las granjas de ejecutivos virtuales y los bots en lenguaje natural están reduciendo el tiempo de respuesta a cero y aumentando las tasas de conversión corporativas en un 40%.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-500 text-sm">FW</div>
+                                <div>
+                                    <p class="text-sm font-bold text-slate-900">Equipo Freework</p>
+                                    <p class="text-xs font-medium text-slate-500">Tecnología & Innovación</p>
+                                </div>
+                            </div>
+                            <span class="w-10 h-10 rounded-full bg-violet-50 text-violet-600 flex items-center justify-center group-hover:bg-violet-600 group-hover:text-white transition-colors">
+                                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cuadrícula de Artículos Recientes -->
+            <h3 class="text-2xl font-black text-slate-900 mb-8 tracking-tight">Publicaciones Recientes</h3>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Artículo 1 -->
+                <div class="group bg-white rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:-translate-y-2 hover:border-blue-200 transition-all cursor-pointer overflow-hidden article-card flex flex-col" onclick="openArticle('art1')">
+                    <div class="h-48 relative overflow-hidden bg-blue-50">
+                        <div class="absolute inset-0 bg-gradient-to-br from-blue-400 to-indigo-500 opacity-80 transition-transform duration-700 article-img"></div>
+                        <div class="absolute inset-0 flex items-center justify-center"><i data-lucide="target" class="w-16 h-16 text-white opacity-40"></i></div>
+                    </div>
+                    <div class="p-8 flex flex-col flex-1">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-[10px] font-bold text-blue-600 uppercase tracking-wider">Estrategia B2B</span>
+                            <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                            <span class="text-xs font-medium text-slate-400">5 min de lectura</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-900 mb-3 leading-tight group-hover:text-blue-600 transition-colors">
+                            Guía para externalizar tu fuerza de ventas sin perder el control.
+                        </h4>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-6 flex-1">
+                            Aprende los pilares fundamentales para delegar tu departamento comercial asegurando alineación total con tus métricas.
+                        </p>
+                        <div class="flex items-center gap-2 text-sm font-bold text-slate-900 group-hover:text-blue-600 mt-auto">
+                            Leer artículo profundo <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Artículo 2 -->
+                <div class="group bg-white rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:-translate-y-2 hover:border-emerald-200 transition-all cursor-pointer overflow-hidden article-card flex flex-col" onclick="openArticle('art2')">
+                    <div class="h-48 relative overflow-hidden bg-emerald-50">
+                        <div class="absolute inset-0 bg-gradient-to-br from-emerald-400 to-teal-500 opacity-80 transition-transform duration-700 article-img"></div>
+                        <div class="absolute inset-0 flex items-center justify-center"><i data-lucide="mic" class="w-16 h-16 text-white opacity-40"></i></div>
+                    </div>
+                    <div class="p-8 flex flex-col flex-1">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Capacitación</span>
+                            <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                            <span class="text-xs font-medium text-slate-400">7 min de lectura</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-900 mb-3 leading-tight group-hover:text-emerald-600 transition-colors">
+                            5 técnicas de neuroventas para equipos que trabajan en remoto.
+                        </h4>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-6 flex-1">
+                            El lenguaje corporal digital existe. Te enseñamos cómo leer a tu prospecto a través de una pantalla y cerrar tratos por videollamada.
+                        </p>
+                        <div class="flex items-center gap-2 text-sm font-bold text-slate-900 group-hover:text-emerald-600 mt-auto">
+                            Leer artículo profundo <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Artículo 3 -->
+                <div class="group bg-white rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:-translate-y-2 hover:border-amber-200 transition-all cursor-pointer overflow-hidden article-card flex flex-col" onclick="openArticle('art3')">
+                    <div class="h-48 relative overflow-hidden bg-amber-50">
+                        <div class="absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-500 opacity-80 transition-transform duration-700 article-img"></div>
+                        <div class="absolute inset-0 flex items-center justify-center"><i data-lucide="megaphone" class="w-16 h-16 text-white opacity-40"></i></div>
+                    </div>
+                    <div class="p-8 flex flex-col flex-1">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-[10px] font-bold text-amber-600 uppercase tracking-wider">Marketing</span>
+                            <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                            <span class="text-xs font-medium text-slate-400">4 min de lectura</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-900 mb-3 leading-tight group-hover:text-amber-600 transition-colors">
+                            El rol del Publicity Manager en la era de los bots conversacionales.
+                        </h4>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-6 flex-1">
+                            Por qué inyectar tráfico cualificado a tus IA de ventas es el secreto mejor guardado de las empresas líderes en 2026.
+                        </p>
+                        <div class="flex items-center gap-2 text-sm font-bold text-slate-900 group-hover:text-amber-600 mt-auto">
+                            Leer artículo profundo <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal del Artículo (Oculto por defecto) -->
+    <div id="article-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-6 lg:p-12">
+        <!-- Fondo oscuro con blur -->
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeArticle()"></div>
+        
+        <!-- Contenedor del Modal -->
+        <div class="modal-content-area relative w-full max-w-4xl bg-white rounded-[2rem] lg:rounded-[3rem] shadow-2xl flex flex-col overflow-hidden max-h-[90vh]">
+            
+            <!-- Botón Cerrar Flotante -->
+            <button onclick="closeArticle()" class="absolute top-6 right-6 w-12 h-12 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-slate-900 hover:bg-slate-100 hover:scale-110 transition-all shadow-md z-20 border border-slate-200">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+
+            <!-- Contenido scrolleable -->
+            <div class="overflow-y-auto no-scrollbar flex-1 relative">
+                <!-- Cabecera del Artículo (Dinámica) -->
+                <div id="modal-header" class="relative pt-20 pb-16 px-8 lg:px-16 overflow-hidden">
+                    <div id="modal-bg-gradient" class="absolute inset-0 bg-gradient-to-br opacity-10"></div>
+                    <div class="relative z-10 max-w-3xl mx-auto">
+                        <div class="flex items-center gap-3 mb-6">
+                            <span id="modal-category" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-white">Categoría</span>
+                            <span class="text-sm font-medium text-slate-500 flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4"></i> <span id="modal-read-time">X min</span></span>
+                        </div>
+                        <h1 id="modal-title" class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.1] mb-6">Título</h1>
+                        <p id="modal-excerpt" class="text-xl text-slate-500 font-medium leading-relaxed">Extracto del artículo.</p>
+                    </div>
+                </div>
+
+                <!-- Cuerpo del Artículo -->
+                <div class="px-8 lg:px-16 pb-20">
+                    <div id="modal-body" class="max-w-3xl mx-auto prose">
+                        <!-- El contenido se inyecta aquí -->
+                    </div>
+                    
+                    <div class="max-w-3xl mx-auto mt-16 pt-10 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full brand-gradient flex items-center justify-center font-bold text-white text-lg">FW</div>
+                            <div>
+                                <p class="text-base font-bold text-slate-900">Equipo Freework</p>
+                                <p class="text-sm font-medium text-slate-500">Transformando el B2B</p>
+                            </div>
+                        </div>
+                        <button onclick="closeArticle(); window.scrollTo(0, document.body.scrollHeight);" class="px-6 py-3 rounded-xl bg-slate-900 text-white font-bold hover:bg-slate-800 transition-colors shadow-lg">
+                            Ver Soluciones Comerciales
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Newsletter Section (Suscripción) -->
+    <section class="py-20 bg-white border-b border-slate-100 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-slate-50 rounded-full mix-blend-multiply filter blur-3xl opacity-70 -translate-y-1/2 translate-x-1/2"></div>
+        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+            <div class="w-16 h-16 mx-auto rounded-2xl brand-gradient flex items-center justify-center text-white mb-6 shadow-xl shadow-fuchsia-500/20">
+                <i data-lucide="mail" width="32" height="32"></i>
+            </div>
+            <h2 class="text-3xl lg:text-4xl font-black text-slate-900 mb-4 tracking-tight">No te quedes atrás en la industria.</h2>
+            <p class="text-slate-500 text-lg mb-8 max-w-2xl mx-auto">Únete a más de 1,200 ejecutivos y empresas que reciben nuestras estrategias semanales de ventas, tecnología y liderazgo.</p>
+            
+            <form class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto" onsubmit="event.preventDefault();">
+                <input type="email" placeholder="Tu correo electrónico profesional" class="flex-1 px-6 h-14 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-200 transition-all font-medium text-slate-700">
+                <button type="submit" class="h-14 px-8 rounded-xl brand-gradient text-white font-bold tracking-wide shadow-lg hover:shadow-xl hover:scale-105 transition-all whitespace-nowrap">
+                    Suscribirme
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer Simple -->
+    <footer class="bg-slate-50 py-10 border-t border-slate-200 text-center">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col items-center justify-center gap-4">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 brand-gradient rounded flex items-center justify-center text-white">
+                    <i data-lucide="zap" width="12" height="12" fill="white"></i>
+                </div>
+                <span class="text-xs font-bold text-slate-900 uppercase tracking-widest">Freework Soluciones</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- BASE DE DATOS DE ARTÍCULOS Y LÓGICA DEL MODAL -->
+    <script>
+        lucide.createIcons();
+
+        const articlesDatabase = {
+            'hero': {
+                title: 'Cómo la Inteligencia Artificial está redefiniendo el cierre de ventas B2B.',
+                category: 'Tecnología & Innovación',
+                categoryColor: 'bg-violet-600',
+                gradient: 'from-violet-500 to-fuchsia-600',
+                readTime: '8 min',
+                excerpt: 'Descubre cómo las granjas de ejecutivos virtuales y los bots en lenguaje natural están reduciendo el tiempo de respuesta a cero y aumentando las tasas de conversión corporativas en un 40%.',
+                content: `
+                    <p>En el mundo corporativo tradicional, el proceso de ventas B2B (Business to Business) siempre ha estado marcado por la fricción: largas esperas para contactar a un asesor, seguimientos manuales que se pierden en bandejas de entrada abarrotadas, y la dependencia total de los horarios de oficina de un equipo humano.</p>
+                    
+                    <p>Sin embargo, la llegada del Procesamiento de Lenguaje Natural (NLP) avanzado ha fracturado este modelo. <strong>La Inteligencia artificial ya no es solo una herramienta de soporte técnico; es la fuerza de cierre principal.</strong></p>
+                    
+                    <h3>El Fin del "Te contactaremos a la brevedad"</h3>
+                    <p>El comprador B2B moderno investiga, compara y decide de forma independiente. Cuando finalmente decide enviar una solicitud, espera inmediatez. Las estadísticas son contundentes: las posibilidades de calificar un lead se reducen exponencialmente si el tiempo de respuesta supera los 5 minutos.</p>
+                    <p>Aquí es donde las granjas de ejecutivos virtuales de Freework brillan. Al implementar bots conversacionales de alta empatía, las empresas logran una operatividad 24/7 ininterrumpida. El bot califica al prospecto en tiempo real, comprende el contexto de su negocio mediante IA generativa, y en muchos casos, ejecuta el cierre de la venta directamente.</p>
+
+                    <h3>Sinergia Humano-Máquina: El Modelo 360</h3>
+                    <p>La revolución no se trata de reemplazar al talento humano, sino de <em>potenciarlo</em>. Los bots asumen el 80% del trabajo pesado (cualificación, agendamiento, resolución de FAQs técnicas), dejando a los ejecutivos estrella enfocarse exclusivamente en el 20% crítico: la negociación compleja de grandes cuentas y el cierre relacional.</p>
+                    <ul>
+                        <li><strong>Cero fugas en el embudo:</strong> Cada lead es atendido instantáneamente.</li>
+                        <li><strong>Data estructurada:</strong> La IA categoriza y etiqueta las objeciones automáticamente.</li>
+                        <li><strong>Escalabilidad sin estrés:</strong> Multiplica tu capacidad de atención por 100 sin contratar infraestructura adicional.</li>
+                    </ul>
+                    <p>Adoptar este modelo ya no es una ventaja competitiva, es un requisito de supervivencia en el mercado actual.</p>
+                `
+            },
+            'art1': {
+                title: 'Guía para externalizar tu fuerza de ventas sin perder el control.',
+                category: 'Estrategia B2B',
+                categoryColor: 'bg-blue-600',
+                gradient: 'from-blue-400 to-indigo-500',
+                readTime: '5 min',
+                excerpt: 'Aprende los pilares fundamentales para delegar tu departamento comercial asegurando alineación total con tus métricas e identidad de marca.',
+                content: `
+                    <p>Uno de los mayores temores de los directores comerciales al pensar en la externalización (outsourcing) es la pérdida de control. "Nadie venderá nuestro producto como nosotros" es la objeción clásica. Sin embargo, en un entorno hipercompetitivo, mantener una fuerza de ventas interna masiva suele representar un costo fijo insostenible.</p>
+                    
+                    <h3>El error de la "Caja Negra"</h3>
+                    <p>El problema no es externalizar, sino el modelo tradicional que utilizan muchas agencias. Operan como una "caja negra" donde la empresa entrega leads y cruza los dedos esperando resultados a fin de mes. En Freework hemos desmantelado ese enfoque.</p>
+                    
+                    <h3>Los 3 Pilares del Control Externalizado</h3>
+                    <ul>
+                        <li><strong>Transparencia Analítica (Dashboards en Tiempo Real):</strong> Si no puedes ver las métricas de tus vendedores externos al instante, estás volando a ciegas. La tecnología actual permite trazar cada interacción, llamada o mensaje.</li>
+                        <li><strong>Onboarding Inmersivo:</strong> Un ejecutivo freelance no es un empleado de segunda categoría. Deben atravesar programas de academia rigurosos sobre <em>tu</em> producto, tu tono de marca y tu cliente ideal antes de hacer el primer contacto.</li>
+                        <li><strong>Sincronización Omnicanal:</strong> La fuerza externa debe trabajar dentro del ecosistema de la empresa matriz, utilizando el mismo CRM y respetando el embudo de marketing existente.</li>
+                    </ul>
+                    <p>La externalización bien ejecutada transforma el gasto fijo de nóminas en una inversión variable de altísimo rendimiento, dándote la libertad de escalar o reducir tu operación según la temporada sin fricciones administrativas.</p>
+                `
+            },
+            'art2': {
+                title: '5 técnicas de neuroventas para equipos que trabajan en remoto.',
+                category: 'Capacitación',
+                categoryColor: 'bg-emerald-600',
+                gradient: 'from-emerald-400 to-teal-500',
+                readTime: '7 min',
+                excerpt: 'El lenguaje corporal digital existe. Te enseñamos cómo leer a tu prospecto a través de una pantalla y cerrar tratos por videollamada.',
+                content: `
+                    <p>Vender cara a cara tiene ventajas biológicas innatas. Las neuronas espejo de nuestro cerebro están diseñadas para decodificar microexpresiones, posturas y tonos en tiempo real. Pero, ¿qué pasa cuando reduces toda esa información a una ventana de Zoom o a una llamada telefónica?</p>
+                    <p>Los equipos remotos deben compensar la falta de presencia física con técnicas psicológicas mucho más agudas. Aquí te presentamos las 5 claves de neuroventas digitales que enseñamos en la Academia Freework:</p>
+
+                    <h3>1. El Encuadre de Autoridad (Framing Visual)</h3>
+                    <p>En videollamadas, tu entorno comunica antes que tus palabras. La cámara debe estar a la altura de los ojos (no picado ni contrapicado). La iluminación debe dar directo al rostro, eliminando sombras que el cerebro primitivo del prospecto interpreta inconscientemente como "engaño" o "peligro".</p>
+
+                    <h3>2. El Poder del "Acompasamiento" Vocal</h3>
+                    <p>Al no poder imitar el lenguaje corporal del cliente, debes espejar su voz. Si el prospecto habla rápido y con energía, aumenta tus revoluciones. Si habla pausado y analítico, reduce tu velocidad y utiliza silencios estratégicos. Esto genera sintonía subconsciente (rapport).</p>
+
+                    <h3>3. Anclaje Visual Digital</h3>
+                    <p>En el terreno digital, la atención se dispersa en segundos. Nunca presentes precios o propuestas solo de forma verbal. Utiliza la pantalla compartida para anclar el valor visualmente <em>antes</em> de revelar el precio final. El contraste visual es clave para que el cerebro justifique la compra.</p>
+
+                    <h3>4. La Técnica del "Sí" Progresivo en Chat</h3>
+                    <p>En ventas asincrónicas (WhatsApp, correo), la estructura del mensaje importa. En lugar de enviar un bloque de texto gigante, diseña preguntas cerradas que el cliente deba responder con "Sí". Micro-compromisos encadenados reducen la resistencia cognitiva al momento del cierre.</p>
+
+                    <h3>5. La Gestión de la Escasez Digital</h3>
+                    <p>La urgencia falsa destruye la confianza B2B. En lugar de presionar, utiliza "Escasez de Ancho de Banda": <em>"Nuestro equipo de implementación solo puede integrar a 3 nuevas cuentas este mes para garantizar la calidad. Me gustaría saber si estamos alineados para reservar su espacio."</em></p>
+                `
+            },
+            'art3': {
+                title: 'El rol del Publicity Manager en la era de los bots conversacionales.',
+                category: 'Marketing',
+                categoryColor: 'bg-amber-600',
+                gradient: 'from-amber-400 to-orange-500',
+                readTime: '4 min',
+                excerpt: 'Por qué inyectar tráfico cualificado a tus IA de ventas es el secreto mejor guardado de las empresas líderes en 2026.',
+                content: `
+                    <p>Imagina que acabas de contratar al mejor vendedor del mundo. Es incansable, sabe las respuestas a todas las objeciones, conoce tu producto a la perfección y puede atender a mil personas al mismo tiempo. Ese vendedor es tu bot conversacional impulsado por IA.</p>
+                    <p>Pero hay un problema crítico: <strong>¿Qué pasa si nadie entra a tu tienda?</strong></p>
+
+                    <h3>El Motor Comercial Incompleto</h3>
+                    <p>Muchas empresas cometen el error de invertir miles de dólares en automatización y embudos de IA, esperando que las ventas sucedan mágicamente. Olvidan el paso cero: el Tráfico.</p>
+                    <p>Aquí es donde la figura del <strong>Publicity Manager</strong> (o Media Buyer) se vuelve más importante que nunca. Su función ya no es solo conseguir "likes" o "reconocimiento de marca". Su función es inyectar prospectos altamente cualificados y con intención de compra directamente en las venas de tu sistema automatizado.</p>
+
+                    <h3>Sinergia Pura: Ads + Bots</h3>
+                    <p>El proceso moderno funciona así:</p>
+                    <ul>
+                        <li><strong>Captación Quirúrgica:</strong> El Publicity Manager diseña campañas en Meta Ads, LinkedIn o Google buscando un dolor muy específico del mercado.</li>
+                        <li><strong>Cero Fricción:</strong> El anuncio no lleva a una landing page aburrida con un formulario de 10 campos. Lleva directamente a un chat (WhatsApp o WebChat).</li>
+                        <li><strong>Cierre Automatizado:</strong> En el instante en que el prospecto hace clic, el Bot lo saluda por su nombre, recoge la intención del anuncio, lo califica y agenda la reunión o cierra la venta transaccional.</li>
+                    </ul>
+
+                    <p>El retorno de inversión (ROI) de un bot IA se multiplica exponencialmente cuando está respaldado por una estrategia publicitaria agresiva y bien segmentada. La tecnología cierra el trato, pero el marketing es quien abre la puerta.</p>
+                `
+            }
+        };
+
+        const modal = document.getElementById('article-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalCategory = document.getElementById('modal-category');
+        const modalReadTime = document.getElementById('modal-read-time');
+        const modalExcerpt = document.getElementById('modal-excerpt');
+        const modalBody = document.getElementById('modal-body');
+        const modalGradient = document.getElementById('modal-bg-gradient');
+
+        function openArticle(articleId) {
+            const article = articlesDatabase[articleId];
+            if (!article) return;
+
+            // Poblar datos
+            modalTitle.innerText = article.title;
+            modalCategory.innerText = article.category;
+            modalCategory.className = `px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-white ${article.categoryColor}`;
+            modalReadTime.innerText = article.readTime;
+            modalExcerpt.innerText = article.excerpt;
+            modalBody.innerHTML = article.content;
+            modalGradient.className = `absolute inset-0 bg-gradient-to-br opacity-10 ${article.gradient}`;
+
+            // Mostrar modal y bloquear scroll del body
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeArticle() {
+            modal.classList.add('hidden');
+            // Devolver scroll al body
+            setTimeout(() => {
+                document.body.style.overflow = '';
+            }, 300); // espera a que termine la animación
+        }
+    </script>
+</body>
+</html>
