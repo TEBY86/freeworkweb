@@ -734,6 +734,92 @@
             </div>
     </section>
 
+    <!-- SECCIÓN DE DESCARGA DE APP (NUEVA INCORPORACIÓN) -->
+    <section class="py-16 lg:py-24 bg-[#07090E] relative overflow-hidden flex justify-center px-6">
+        <!-- Luces de fondo globales de la sección -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-violet-600/20 blur-[120px] rounded-full pointer-events-none"></div>
+
+        <div class="w-full max-w-5xl relative group z-10">
+            <!-- Luces de fondo (Glow) que reaccionan al hover -->
+            <div class="absolute -inset-1 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-[2.5rem] blur-lg opacity-30 group-hover:opacity-60 transition duration-1000 group-hover:duration-200 pointer-events-none"></div>
+            
+            <!-- Contenedor Principal Glassmorphism -->
+            <div class="relative bg-[#0d1017]/90 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-8 md:p-12 shadow-2xl overflow-hidden flex flex-col md:flex-row items-center gap-8 md:gap-12">
+                
+                <!-- Decoraciones de Cristal interno -->
+                <div class="absolute -top-24 -right-24 w-64 h-64 bg-fuchsia-500/10 rounded-full blur-[50px] pointer-events-none"></div>
+                <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-violet-500/10 rounded-full blur-[50px] pointer-events-none"></div>
+
+                <!-- Columna Izquierda: Textos y CTA -->
+                <div class="flex-1 text-center md:text-left relative z-10">
+                    
+                    <!-- Badge Superior -->
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 mb-6 shadow-inner">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-fuchsia-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-fuchsia-500"></span>
+                        </span>
+                        <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">App Oficial Freework</span>
+                    </div>
+
+                    <h2 class="text-3xl md:text-4xl font-black text-white tracking-tight mb-4 leading-tight">
+                        Tu oficina de ventas, <br class="hidden md:block" />
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">
+                            ahora en tu bolsillo.
+                        </span>
+                    </h2>
+                    
+                    <p class="text-slate-400 text-sm md:text-base font-medium leading-relaxed mb-8 max-w-lg mx-auto md:mx-0">
+                        Ingresa ventas, revisa tus comisiones en tiempo real y gestiona tu cartera de clientes desde cualquier lugar. Operatividad 100% móvil diseñada para ejecutivos de alto rendimiento.
+                    </p>
+
+                    <!-- Botones de Descarga -->
+                    <div class="flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start">
+                        
+                        <!-- Botón Principal (Utiliza la clase premium del archivo principal + CSS en línea para colores Android) -->
+                        <a href="TU_ENLACE_DE_DRIVE_AQUI" target="_blank" rel="noopener noreferrer" class="btn-action-premium flex items-center justify-center gap-2.5 w-full sm:w-auto px-8 h-14 rounded-xl text-white font-black text-sm uppercase tracking-widest transition-transform active:scale-95 cursor-pointer border border-[#3DDC84]/30" style="background: linear-gradient(135deg, #10b981 0%, #047857 100%); box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4), inset 0 1px 1px rgba(255,255,255,0.3);">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 drop-shadow-md text-[#3DDC84] z-10 relative">
+                                <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4483-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0004.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.415.415 0 0 0-.1521-.5676.416.416 0 0 0-.5676.1521l-2.0223 3.503C15.5902 8.244 13.8533 7.85 12 7.85c-1.8533 0-3.5902.394-5.1367 1.1004L4.841 5.4475a.4173.4173 0 0 0-.5676-.1521.4152.4152 0 0 0-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3436-4.1021-2.6892-7.5743-6.1185-9.4396"/>
+                            </svg>
+                            <span class="z-10 relative">Descargar APK</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Columna Derecha: Arte Visual / Logo Gigante Android -->
+                <div class="shrink-0 relative z-10 hidden sm:block">
+                    <div class="relative w-48 h-48 md:w-64 md:h-64 flex items-center justify-center">
+                        
+                        <!-- Círculos de fondo animados (Glow Verde Android) -->
+                        <div class="absolute inset-0 bg-[#3DDC84]/20 rounded-full animate-pulse blur-2xl"></div>
+                        <div class="absolute inset-4 border border-[#3DDC84]/30 rounded-full border-dashed animate-[spin_15s_linear_infinite]"></div>
+                        <div class="absolute inset-10 border border-emerald-500/20 rounded-full animate-[spin_20s_linear_infinite_reverse]"></div>
+                        
+                        <!-- Bloque Central: App Icon Premium -->
+                        <div class="w-32 h-32 md:w-40 md:h-40 bg-gradient-to-b from-[#161b26] to-[#0a0d14] backdrop-blur-md rounded-[2.5rem] border border-white/10 shadow-[0_20px_50px_rgba(61,220,132,0.25)] flex flex-col items-center justify-center relative transform group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500">
+                            <!-- Brillo interno -->
+                            <div class="absolute inset-0 bg-gradient-to-br from-[#3DDC84]/10 to-transparent rounded-[2.5rem]"></div>
+                            
+                            <!-- SVG Logo Android Oficial Gigante -->
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-16 h-16 md:w-20 md:h-20 text-[#3DDC84] drop-shadow-[0_0_15px_rgba(61,220,132,0.6)] relative z-10">
+                                <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4483-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0004.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.415.415 0 0 0-.1521-.5676.416.416 0 0 0-.5676.1521l-2.0223 3.503C15.5902 8.244 13.8533 7.85 12 7.85c-1.8533 0-3.5902.394-5.1367 1.1004L4.841 5.4475a.4173.4173 0 0 0-.5676-.1521.4152.4152 0 0 0-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3436-4.1021-2.6892-7.5743-6.1185-9.4396"/>
+                            </svg>
+                            
+                            <!-- Etiqueta inferior -->
+                            <span class="mt-1 md:mt-2 text-white font-black text-[10px] md:text-xs tracking-[0.2em] uppercase relative z-10 drop-shadow-md">Android</span>
+                            
+                            <!-- Badge Notificación "New" -->
+                            <div class="absolute -top-3 -right-3 px-2 py-1 bg-rose-500 rounded-full border-2 border-[#131722] flex items-center justify-center text-[9px] font-black text-white shadow-lg uppercase tracking-wider">
+                                V 2.0
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
     <!-- Partners Section -->
     <section class="py-10 border-y border-slate-100 bg-slate-50/50">
         <div class="max-w-7xl mx-auto px-6">
