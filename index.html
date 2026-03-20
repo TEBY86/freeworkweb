@@ -2,15 +2,16 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Freework - Plataforma Unificada</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
         /* Tipografía Corporativa Premium */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
         /* ==========================================================
            1. CONFIGURACIÓN BASE Y CONTENEDOR IFRAME
@@ -21,9 +22,9 @@
             font-family: 'Inter', sans-serif;
             -webkit-font-smoothing: antialiased;
             width: 100vw;
-            height: 100vh;
-            overflow: hidden; /* Evita doble scroll, el scroll será dentro del iframe */
-            background-color: #f8fafc; /* Color de fondo base neutro */
+            height: 100dvh; /* dvh asegura que respete la barra móvil */
+            overflow: hidden; 
+            background-color: #07090E; /* Fondo base oscuro */
         }
 
         #content-frame {
@@ -90,113 +91,6 @@
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
         }
 
-        /* ==========================================================
-           3. ESTILOS MÓVIL (ISLA DINÁMICA ULTRA PREMIUM)
-           ========================================================== */
-        .mobile-pill {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            height: 64px;
-            padding: 6px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(30px) saturate(200%);
-            -webkit-backdrop-filter: blur(30px) saturate(200%);
-            border-radius: 9999px;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 
-                0 24px 48px -12px rgba(0,0,0,0.15),
-                0 8px 24px -6px rgba(0,0,0,0.08),
-                inset 0 1px 2px rgba(255,255,255,1);
-            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            width: 64px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .mobile-pill.is-open {
-            width: 100%;
-        }
-
-        .scroll-mask-view {
-            display: flex;
-            align-items: center;
-            overflow-x: auto;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
-            width: 100%;
-            height: 100%;
-            flex-grow: 1;
-            padding: 0 16px;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        .mobile-pill.is-open .scroll-mask-view { opacity: 1; transition-delay: 0.1s; }
-        .scroll-mask-view::-webkit-scrollbar { display: none; }
-
-        .links-inner-track {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            opacity: 0;
-            transform: translateX(20px);
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            white-space: nowrap;
-            padding-right: 30px;
-            padding-left: 5px;
-        }
-        .mobile-pill.is-open .links-inner-track {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .nav-link-mobile {
-            position: relative;
-            color: #64748b;
-            font-size: 13px;
-            font-weight: 600;
-            padding: 8px 16px;
-            border-radius: 9999px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-        .nav-link-mobile.is-active { 
-            color: #5B3281; 
-            font-weight: 800;
-            background: rgba(91, 50, 129, 0.08);
-        }
-
-        /* Micro-Barra Móvil */
-        .progress-indicator-bg {
-            position: absolute;
-            bottom: 6px;
-            left: 20%;
-            right: 35%;
-            height: 3px;
-            background: rgba(0,0,0,0.06);
-            border-radius: 10px;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            pointer-events: none;
-            overflow: hidden;
-        }
-        .mobile-pill.is-open .progress-indicator-bg { opacity: 1; }
-        
-        .progress-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #5B3281, #c026d3);
-            border-radius: 10px;
-            transition: width 0.15s ease-out;
-        }
-
-        /* ==========================================================
-           4. BOTÓN DE ACCIÓN CTA
-           ========================================================== */
         .btn-action-premium {
             background: linear-gradient(135deg, #5B3281 0%, #3b1654 100%);
             color: white;
@@ -206,7 +100,6 @@
                 inset 0 1px 1px rgba(255, 255, 255, 0.2),
                 inset 0 -2px 4px rgba(0,0,0,0.2);
             cursor: pointer;
-            z-index: 50;
             position: relative;
             overflow: hidden;
         }
@@ -220,18 +113,132 @@
         
         .btn-action-premium:active { transform: scale(0.98); }
 
-        .icon-box-trigger {
-            width: 52px; 
-            height: 52px;
+
+        /* ==========================================================
+           3. ESTILOS MÓVIL (MAGIC TAB BAR - ULTRA PREMIUM)
+           ========================================================== */
+        
+        .mobile-nav-wrapper {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        .premium-bottom-bar {
+            background: rgba(13, 14, 18, 0.85); /* Negro profundo cristalino */
+            backdrop-filter: blur(35px) saturate(200%);
+            -webkit-backdrop-filter: blur(35px) saturate(200%);
+            border-top: 1px solid rgba(255, 255, 255, 0.08); /* Brillo cortado superior */
+            box-shadow: 0 -20px 40px -10px rgba(0, 0, 0, 0.5); /* Sombra difusa hacia arriba */
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            height: calc(72px + env(safe-area-inset-bottom, 0px));
+            padding-bottom: env(safe-area-inset-bottom, 0px); /* Ajuste automático Apple */
+            position: relative;
+        }
+
+        /* --- GLIDER MÁGICO (Línea de Neón Superior) --- */
+        .magic-glider {
+            position: absolute;
+            top: -1px;
+            left: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #c026d3, #7c3aed);
+            box-shadow: 
+                0 2px 10px 1px rgba(217, 70, 239, 0.7), 
+                0 0 25px rgba(124, 58, 237, 0.5);
+            border-radius: 0 0 4px 4px;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 10;
+            opacity: 0; /* Oculto hasta que JS inicializa */
+        }
+
+        .nav-link-app {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 72px;
+            color: #475569; /* Gris pizarra oscuro inactivo */
+            text-decoration: none;
+            -webkit-tap-highlight-color: transparent;
+            position: relative;
+            padding-top: 4px;
+        }
+
+        .nav-icon-box {
+            position: relative;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Aura de luz trasera (oculta por defecto) */
+        .nav-icon-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(217, 70, 239, 0.25) 0%, transparent 70%);
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .nav-link-app svg {
+            width: 24px;
+            height: 24px;
+            stroke-width: 1.5px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 2;
+        }
+
+        .nav-link-app span {
+            font-size: 10px;
+            font-weight: 500;
+            margin-top: 2px;
+            transition: all 0.3s ease;
+            letter-spacing: 0.02em;
+        }
+
+        /* --- ESTADO ACTIVO (BOTÓN SELECCIONADO) --- */
+        .nav-link-app.is-active {
+            color: #f8fafc; /* Texto blanco vibrante */
+        }
+
+        .nav-link-app.is-active .nav-icon-box {
+            transform: translateY(-4px); /* El ícono flota hacia arriba */
+        }
+
+        .nav-link-app.is-active .nav-icon-box::before {
+            opacity: 1;
+            transform: scale(1.6); /* El aura de luz crece y se enciende */
+        }
+
+        .nav-link-app.is-active svg {
+            stroke: #d946ef; /* Fucsia Neón */
+            stroke-width: 2.5px;
+            filter: drop-shadow(0 2px 6px rgba(217, 70, 239, 0.6)); /* Sombra brillante */
+        }
+
+        .nav-link-app.is-active span {
+            font-weight: 700;
+            color: #f8fafc;
+            transform: translateY(-2px);
         }
     </style>
 </head>
 <body class="relative w-full h-full">
 
-    <!-- IFRAME QUE MUESTRA TODAS LAS PÁGINAS (ACTUALIZADO A INICIO.HTML) -->
+    <!-- IFRAME QUE MUESTRA TODAS LAS PÁGINAS -->
     <iframe id="content-frame" src="inicio.html" title="Contenido Principal"></iframe>
 
     <!-- 
@@ -242,13 +249,10 @@
     <header class="hidden md:flex fixed top-6 left-0 w-full justify-center z-[9999] px-6 click-through">
         <nav class="desktop-dock click-catch">
             
-            <!-- Contenedor de enlaces dinámicos -->
             <div id="desktop-links" class="desktop-links-container"></div>
 
-            <!-- Línea separadora sutil -->
             <div class="w-[1px] h-8 bg-slate-200 mx-2"></div>
 
-            <!-- Botón CTA Premium que ahora carga el iframe -->
             <a onclick="loadInIframe('registro.html')" class="btn-action-premium no-tap-highlight flex items-center text-white rounded-full py-3 px-6 font-bold text-sm tracking-tight border border-white/10 shrink-0">
                 <div class="mr-2.5 bg-white/20 p-1.5 rounded-full flex items-center justify-center border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -263,57 +267,66 @@
 
     <!-- 
       ========================================================================
-      📱 VISTA MÓVIL (ISLA DINÁMICA CENTRADA PREMIUM)
+      📱 VISTA MÓVIL (ULTRA PREMIUM BOTTOM NAVIGATION)
       ========================================================================
     -->
-    <div class="md:hidden fixed top-5 left-1/2 -translate-x-1/2 z-[9999] click-through w-[92%] max-w-[400px] flex justify-center">
-        <nav id="mobile-pill-frame" class="mobile-pill click-catch is-open">
-            
-            <div id="scroll-box-m" class="scroll-mask-view">
-                <div id="mobile-links-track" class="links-inner-track">
-                    <!-- Los enlaces se inyectan aquí -->
-                </div>
-            </div>
-
-            <div class="progress-indicator-bg">
-                <div id="fill-bar-m" class="progress-fill"></div>
-            </div>
-
-            <!-- Botón Disparador (Cerrar/Abrir) -->
-            <div id="trigger-m" class="icon-box-trigger btn-action-premium no-tap-highlight">
-                <svg id="icon-u-m" class="hidden" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                </svg>
-                <svg id="icon-x-m" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </div>
-            
+    <div class="md:hidden mobile-nav-wrapper click-catch">
+        <nav class="premium-bottom-bar" id="mobile-bottom-nav">
+            <!-- La línea de Neón Mágica -->
+            <div id="magic-glider" class="magic-glider"></div>
+            <!-- Los enlaces móviles se inyectan automáticamente aquí -->
         </nav>
     </div>
 
     <!-- 
       ========================================================================
-      ⚙️ LÓGICA DE NAVEGACIÓN Y CONTROL DEL IFRAME
+      ⚙️ LÓGICA DE NAVEGACIÓN Y CONTROL
       ========================================================================
     -->
     <script>
         const BOTONES = [
-            { nombre: 'Home', link: 'inicio.html' }, // ACTUALIZADO A INICIO.HTML
+            { nombre: 'Home', link: 'inicio.html' },
             { nombre: 'Empresa', link: 'empresa.html' }, 
-           // nombre: 'Marcas', link: 'marcas.html' },
             { nombre: 'Servicios', link: 'servicios.html' },
             { nombre: 'Nosotros', link: 'nosotros.html' }, 
             { nombre: 'Blog', link: 'blog.html' }
         ];
+
+        // Diccionario de Iconos Lucide
+        const ICONS = {
+            'inicio.html': 'home',
+            'empresa.html': 'building-2',
+            'servicios.html': 'layers',
+            'nosotros.html': 'users',
+            'blog.html': 'book-open'
+        };
+
+        // Función que mueve el Glider de Neón hacia la pestaña seleccionada
+        function updateGlider() {
+            const glider = document.getElementById('magic-glider');
+            const activeLink = document.querySelector('.nav-link-app.is-active');
+            
+            if (glider && activeLink) {
+                const rect = activeLink.getBoundingClientRect();
+                const barRect = document.getElementById('mobile-bottom-nav').getBoundingClientRect();
+                
+                const width = 40; // Ancho del haz de luz
+                // Calcular posición relativa al contenedor
+                const left = (rect.left - barRect.left) + (rect.width / 2) - (width / 2);
+                
+                glider.style.width = `${width}px`;
+                glider.style.transform = `translateX(${left}px)`;
+                glider.style.opacity = '1';
+            }
+        }
 
         // Función global para cargar URLs en el iframe y actualizar estados
         function loadInIframe(urlTarget) {
             const iframe = document.getElementById('content-frame');
             iframe.src = urlTarget;
             
-            // Actualizar la clase "is-active" visualmente
-            document.querySelectorAll('.nav-link-desktop, .nav-link-mobile').forEach(el => {
+            // Actualizar clases activas
+            document.querySelectorAll('.nav-link-desktop, .nav-link-app').forEach(el => {
                 if (el.dataset.link === urlTarget) {
                     el.classList.add('is-active');
                 } else {
@@ -321,73 +334,45 @@
                 }
             });
 
-            // En móvil, contraer automáticamente la cápsula al hacer clic
-            if(window.innerWidth < 768) {
-                const mPill = document.getElementById('mobile-pill-frame');
-                const iUser = document.getElementById('icon-u-m');
-                const iClose = document.getElementById('icon-x-m');
-                
-                mPill.classList.remove('is-open');
-                iUser.classList.remove('hidden'); 
-                iClose.classList.add('hidden');
-            }
+            // Actualizar la posición de la luz de neón
+            setTimeout(updateGlider, 50);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             const dCont = document.getElementById('desktop-links');
-            const mCont = document.getElementById('mobile-links-track');
-            const mPill = document.getElementById('mobile-pill-frame');
-            const mTrigger = document.getElementById('trigger-m');
-            const mScroll = document.getElementById('scroll-box-m');
-            const mBar = document.getElementById('fill-bar-m');
-            
-            const iUser = document.getElementById('icon-u-m');
-            const iClose = document.getElementById('icon-x-m');
+            const mNav = document.getElementById('mobile-bottom-nav');
 
-            // 1. Inyectar Links
             BOTONES.forEach((item, index) => {
-                // Generar enlace para Escritorio
+                // Generar enlace para ESCRITORIO
                 const dL = document.createElement('a');
                 dL.textContent = item.nombre;
-                dL.dataset.link = item.link; // Guardar URL como data attribute
+                dL.dataset.link = item.link;
                 dL.className = `nav-link-desktop ${index === 0 ? 'is-active' : ''}`;
                 dL.onclick = () => loadInIframe(item.link);
                 dCont.appendChild(dL);
 
-                // Generar enlace para Móvil
+                // Generar enlace para MÓVIL (Magic Tab Bar)
                 const mL = document.createElement('a');
-                mL.textContent = item.nombre;
                 mL.dataset.link = item.link;
-                mL.className = `nav-link-mobile ${index === 0 ? 'is-active' : ''}`;
+                mL.className = `nav-link-app cursor-pointer ${index === 0 ? 'is-active' : ''}`;
                 mL.onclick = () => loadInIframe(item.link);
-                mCont.appendChild(mL);
+
+                const iconName = ICONS[item.link] || 'circle';
+
+                mL.innerHTML = `
+                    <div class="nav-icon-box">
+                        <i data-lucide="${iconName}"></i>
+                    </div>
+                    <span>${item.nombre}</span>
+                `;
+                mNav.appendChild(mL);
             });
 
-            // 2. Interacción de Isla Dinámica (Abrir / Cerrar)
-            mTrigger.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const isOpen = mPill.classList.toggle('is-open');
-                if (isOpen) {
-                    iUser.classList.add('hidden'); 
-                    iClose.classList.remove('hidden');
-                } else {
-                    iUser.classList.remove('hidden'); 
-                    iClose.classList.add('hidden');
-                }
-            });
-
-            // 3. Barra de Recorrido Móvil
-            mScroll.addEventListener('scroll', () => {
-                const scrollable = mScroll.scrollWidth - mScroll.clientWidth;
-                const scrolled = mScroll.scrollLeft;
-                
-                if (scrollable > 0) {
-                    const percentage = (scrolled / scrollable) * 100;
-                    mBar.style.width = `${percentage}%`;
-                }
-            });
+            lucide.createIcons();
+            
+            // Inicializar la posición del neón y escuchar cambios de pantalla
+            setTimeout(updateGlider, 100);
+            window.addEventListener('resize', updateGlider);
         });
     </script>
 </body>
