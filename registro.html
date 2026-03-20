@@ -77,6 +77,64 @@
             -webkit-text-fill-color: white !important;
             transition: background-color 5000s ease-in-out 0s;
         }
+
+        /* ── EFECTO FIBRA ÓPTICA (DATA STREAMS) ── */
+        .fiber-container {
+            position: absolute;
+            inset: -50%;
+            overflow: hidden;
+            z-index: 1;
+            transform: rotate(-35deg);
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        .fiber {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, #c026d3 50%, #fff 100%);
+            box-shadow: 0 0 15px #d946ef, 0 0 30px #8b5cf6;
+            border-radius: 999px;
+            animation: data-stream linear infinite;
+            opacity: 0;
+        }
+        .fiber:nth-child(1) { top: 20%; left: -100%; width: 150px; animation-duration: 3s; animation-delay: 0s; }
+        .fiber:nth-child(2) { top: 40%; left: -100%; width: 250px; animation-duration: 4s; animation-delay: 1.2s; background: linear-gradient(90deg, rgba(255,255,255,0) 0%, #7c3aed 50%, #fff 100%); box-shadow: 0 0 15px #7c3aed, 0 0 30px #c026d3; }
+        .fiber:nth-child(3) { top: 60%; left: -100%; width: 100px; animation-duration: 2.5s; animation-delay: 0.5s; }
+        .fiber:nth-child(4) { top: 80%; left: -100%; width: 300px; animation-duration: 4.5s; animation-delay: 2s; background: linear-gradient(90deg, rgba(255,255,255,0) 0%, #3b82f6 50%, #fff 100%); box-shadow: 0 0 15px #3b82f6, 0 0 30px #8b5cf6; }
+        .fiber:nth-child(5) { top: 30%; left: -100%; width: 200px; animation-duration: 3.5s; animation-delay: 2.5s; }
+        
+        @keyframes data-stream {
+            0% { transform: translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateX(200vw); opacity: 0; }
+        }
+
+        /* ── BOTÓN PREMIUM SHIMMER Y GLASS CARD ── */
+        .btn-premium-shimmer {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #6d28d9 0%, #a21caf 100%);
+            box-shadow: 0 10px 25px -5px rgba(192, 38, 211, 0.4), inset 0 1px 1px rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn-premium-shimmer::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-20deg);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+        
+        .glass-card {
+            background: rgba(17, 21, 32, 0.5);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
     </style>
 </head>
 <body>
@@ -86,10 +144,20 @@
         <!-- ── EFECTOS DE FONDO (ESTILO CRM) ── -->
         <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
             <div class="bg-chart"></div>
-            <div class="absolute top-0 -left-20 w-96 h-96 bg-violet-600/10 rounded-full mix-blend-screen filter blur-[100px]"></div>
-            <div class="absolute bottom-0 -right-20 w-96 h-96 bg-fuchsia-600/5 rounded-full mix-blend-screen filter blur-[100px]"></div>
-            <div class="absolute inset-0 bg-noise opacity-40"></div>
-            <div class="absolute inset-0 grid-lines"></div>
+            <div class="absolute top-0 -left-20 w-96 h-96 bg-violet-600/20 rounded-full mix-blend-screen filter blur-[100px]"></div>
+            <div class="absolute bottom-0 -right-20 w-96 h-96 bg-fuchsia-600/15 rounded-full mix-blend-screen filter blur-[100px]"></div>
+            
+            <!-- FIBRA ÓPTICA ANIMADA -->
+            <div class="fiber-container">
+                <div class="fiber"></div>
+                <div class="fiber"></div>
+                <div class="fiber"></div>
+                <div class="fiber"></div>
+                <div class="fiber"></div>
+            </div>
+
+            <div class="absolute inset-0 bg-noise opacity-30"></div>
+            <div class="absolute inset-0 grid-lines opacity-60"></div>
         </div>
             
         <div class="relative z-10 w-full max-w-sm mx-auto px-6 flex flex-col h-full pt-[calc(var(--safe-top)+2rem)]">
@@ -115,52 +183,54 @@
             </div>
 
             <!-- FORMULARIO (ESTILO DASHBOARD) -->
-            <div class="w-full flex-1 overflow-y-auto no-scrollbar pb-10 safe-pb space-y-3.5 animate-fade-in-up" style="animation-delay: 0.1s;">
+            <div class="w-full flex-1 overflow-y-auto no-scrollbar pb-10 safe-pb animate-fade-in-up" style="animation-delay: 0.1s;">
                 
-                <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <i data-lucide="user" class="text-slate-500 w-5 h-5 group-focus-within:text-white transition-colors"></i>
+                <div class="glass-card rounded-[2rem] p-5 space-y-3.5 mb-2 shadow-2xl">
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i data-lucide="user" class="text-slate-500 w-5 h-5 group-focus-within:text-fuchsia-400 transition-colors"></i>
+                        </div>
+                        <input type="text" id="reg-nombre" placeholder="Nombre completo" class="w-full py-4 pl-12 pr-4 bg-black/40 border border-white/5 rounded-xl text-sm text-white focus:outline-none focus:border-fuchsia-500/50 focus:bg-black/60 transition-all font-medium placeholder-slate-500 shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"/>
                     </div>
-                    <input type="text" id="reg-nombre" placeholder="Nombre completo" class="w-full py-4 pl-12 pr-4 bg-[#111520] border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-violet-500 focus:bg-[#161b29] transition-all font-medium placeholder-slate-600 shadow-inner"/>
+                    
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i data-lucide="mail" class="text-slate-500 w-5 h-5 group-focus-within:text-fuchsia-400 transition-colors"></i>
+                        </div>
+                        <input type="email" id="reg-email" placeholder="Correo de contacto" class="w-full py-4 pl-12 pr-4 bg-black/40 border border-white/5 rounded-xl text-sm text-white focus:outline-none focus:border-fuchsia-500/50 focus:bg-black/60 transition-all font-medium placeholder-slate-500 shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]" autocapitalize="none"/>
+                    </div>
+                    
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i data-lucide="smartphone" class="text-slate-500 w-5 h-5 group-focus-within:text-fuchsia-400 transition-colors"></i>
+                        </div>
+                        <input type="tel" inputmode="tel" id="reg-tel" placeholder="WhatsApp (+569...)" class="w-full py-4 pl-12 pr-4 bg-black/40 border border-white/5 rounded-xl text-sm text-white focus:outline-none focus:border-fuchsia-500/50 focus:bg-black/60 transition-all font-medium placeholder-slate-500 shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"/>
+                    </div>
+                    
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i data-lucide="key" class="text-slate-500 w-5 h-5 group-focus-within:text-fuchsia-400 transition-colors"></i>
+                        </div>
+                        <input type="password" id="reg-pass" placeholder="Crea tu clave secreta" class="w-full py-4 pl-12 pr-4 bg-black/40 border border-white/5 rounded-xl text-sm text-white focus:outline-none focus:border-fuchsia-500/50 focus:bg-black/60 transition-all font-medium placeholder-slate-500 shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"/>
+                    </div>
+                    
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i data-lucide="check-circle" class="text-slate-500 w-5 h-5 group-focus-within:text-fuchsia-400 transition-colors"></i>
+                        </div>
+                        <input type="password" id="reg-pass2" placeholder="Confirmar clave" class="w-full py-4 pl-12 pr-4 bg-black/40 border border-white/5 rounded-xl text-sm text-white focus:outline-none focus:border-fuchsia-500/50 focus:bg-black/60 transition-all font-medium placeholder-slate-500 shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"/>
+                    </div>
+                    
+                    <button onclick="handleRegister()" id="btn-register" class="w-full h-14 mt-2 btn-premium-shimmer rounded-xl text-white font-black text-sm uppercase tracking-widest active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="rocket" class="w-4 h-4"></i>
+                        Activar mi Ecosistema
+                    </button>
                 </div>
                 
-                <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <i data-lucide="mail" class="text-slate-500 w-5 h-5 group-focus-within:text-white transition-colors"></i>
-                    </div>
-                    <input type="email" id="reg-email" placeholder="Correo de contacto" class="w-full py-4 pl-12 pr-4 bg-[#111520] border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-violet-500 focus:bg-[#161b29] transition-all font-medium placeholder-slate-600 shadow-inner" autocapitalize="none"/>
-                </div>
-                
-                <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <i data-lucide="smartphone" class="text-slate-500 w-5 h-5 group-focus-within:text-white transition-colors"></i>
-                    </div>
-                    <input type="tel" inputmode="tel" id="reg-tel" placeholder="WhatsApp (+569...)" class="w-full py-4 pl-12 pr-4 bg-[#111520] border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-violet-500 focus:bg-[#161b29] transition-all font-medium placeholder-slate-600 shadow-inner"/>
-                </div>
-                
-                <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <i data-lucide="key" class="text-slate-500 w-5 h-5 group-focus-within:text-white transition-colors"></i>
-                    </div>
-                    <input type="password" id="reg-pass" placeholder="Crea tu clave secreta" class="w-full py-4 pl-12 pr-4 bg-[#111520] border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-violet-500 focus:bg-[#161b29] transition-all font-medium placeholder-slate-600 shadow-inner"/>
-                </div>
-                
-                <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <i data-lucide="check-circle" class="text-slate-500 w-5 h-5 group-focus-within:text-white transition-colors"></i>
-                    </div>
-                    <input type="password" id="reg-pass2" placeholder="Confirmar clave" class="w-full py-4 pl-12 pr-4 bg-[#111520] border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-violet-500 focus:bg-[#161b29] transition-all font-medium placeholder-slate-600 shadow-inner"/>
-                </div>
-                
-                <button onclick="handleRegister()" id="btn-register" class="w-full h-14 mt-4 brand-gradient rounded-xl text-white font-black text-sm uppercase tracking-widest shadow-lg shadow-violet-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 border border-white/10">
-                    <i data-lucide="rocket" class="w-4 h-4"></i>
-                    Activar mi Ecosistema
-                </button>
-                
-                <!-- ENLACE NATIVO A INICIO.HTML -->
+                <!-- ENLACE NATIVO A INICIO.HTML CORREGIDO PARA IFRAME -->
                 <div class="text-center mt-6 pt-2 pb-8 flex flex-col items-center gap-1.5">
                     <span class="text-[9px] font-medium text-slate-500 uppercase tracking-widest">¿Ya eres socio? Ignora este paso</span>
-                    <button onclick="redirectUrl('inicio.html')" class="text-[11px] font-bold text-slate-300 hover:text-white transition-colors uppercase tracking-wider active:scale-95 flex items-center gap-1.5 mt-1">
+                    <button onclick="window.parent.loadInIframe('inicio.html')" class="text-[11px] font-bold text-slate-300 hover:text-white transition-colors uppercase tracking-wider active:scale-95 flex items-center gap-1.5 mt-1 cursor-pointer">
                         Explora y <span class="text-fuchsia-400 font-black">Descarga la App</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-fuchsia-400"></i>
                     </button>
                 </div>
@@ -313,10 +383,22 @@
             lucide.createIcons({root: btn});
         }
 
+        // ═══════════════════════════════════════════════════
+        // LÓGICA DE REDIRECCIÓN CORREGIDA (APP SHELL / IFRAME)
+        // ═══════════════════════════════════════════════════
         function redirectUrl(url) {
             try { 
-                if (window.top !== window.self) { window.top.location.href = url; } 
-                else { window.location.href = url; } 
+                // 1. Intenta comunicarse con el menú maestro (App Shell)
+                if (window.parent && typeof window.parent.loadInIframe === 'function') {
+                    window.parent.loadInIframe(url);
+                } 
+                // 2. Fallback estándar si se abre por fuera del menú
+                else if (window.top !== window.self) { 
+                    window.top.location.href = url; 
+                } 
+                else { 
+                    window.location.href = url; 
+                } 
             } catch (error) { 
                 window.location.href = url;
             }
