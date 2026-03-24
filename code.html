@@ -689,26 +689,44 @@
                 }
             }, []);
 
-            // ── Persistir BD + exportar archivos a Drive ──
-            const persistir = async (newProjects, currentProject = null) => {
-                if (IS_NATIVE) {
-                    google.script.run
-                        .withSuccessHandler(() => {})
-                        .guardarBaseDeDatos(JSON.stringify(newProjects));
-                    if (currentProject) {
-                        google.script.run
-                            .withSuccessHandler(() => {})
-                            .exportarProyectoADrive(currentProject);
-                    }
-                } else if (GAS_CONFIGURED) {
-                    try {
-                        await apiGuardar(newProjects);
-                        if (currentProject) {
-                            await apiExportar(currentProject);
-                        }
-                    } catch(e) { console.warn('Error persistiendo:', e); }
-                }
-            };
+            // En la función persistir() del App, reemplazar el bloque GAS_CONFIGURED por:
+const persistir = async (newProjects, currentProject = null) => {
+  if (!GAS_CONFIGURED) return;
+  try {
+    if (currentProject) {
+      // Primero exportar a Drive y obtener las URLs reales
+      const res = await fetch(window.GAS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'exportar', proyecto: currentProject })
+      });
+      const json = await res.json();
+      
+      // Si Drive devolvió URLs, actualizar el proyecto con ellas
+      // (reemplaza base64 por URL de Drive para no saturar UserProperties)
+      if (json.ok && json.urls) {
+        const updated = { ...currentProject };
+        if (json.urls.images?.length) {
+          updated.images = json.urls.images; // URLs de Drive en vez de base64
+        }
+        if (json.urls.attachments) {
+          updated.attachments = updated.attachments.map(att => ({
+            ...att,
+            data: undefined, // ya no necesitamos el base64
+            driveUrl: json.urls.attachments[att.path || att.name] || att.driveUrl
+          }));
+        }
+        newProjects = newProjects.map(p => p.id === updated.id ? updated : p);
+      }
+    }
+    // Luego guardar metadata limpia en UserProperties
+    await fetch(window.GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'guardar', data: newProjects })
+    });
+  } catch(e) { console.warn('Error persistiendo:', e); }
+};
 
             const handleSave = (data) => {
                 setLoading(true);
