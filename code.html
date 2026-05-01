@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        @import url('https://script.google.com/macros/s/AKfycbz0TYQPqnqvqPhhOps8s3v-kGAocNYwM3-FQqMdIOgygER2jov-YuxmlgV-YtEwgaRHWA/exec');
+        @import url('https://script.google.com/macros/s/AKfycbwiVQ63wl0GEZTdt0vlDTmZMD3asHhG2hGGV0eXUUoMsNQPgtV5uRwcEqb5Po33RKi1/exec');
 
         :root {
             --bg-app: #FAFAFA;
@@ -693,41 +693,62 @@
 const persistir = async (newProjects, currentProject = null) => {
   if (!GAS_CONFIGURED) return;
   try {
+    let projectsToSave = newProjects;
+
+    // 1. Si hay un proyecto nuevo/editado con base64, exportar a Drive PRIMERO
     if (currentProject) {
-      // Primero exportar a Drive y obtener las URLs reales
       const res = await fetch(window.GAS_URL, {
         method: 'POST',
+        // ✅ SIN mode:'no-cors' → ahora podemos leer la respuesta
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'exportar', proyecto: currentProject })
       });
-      const json = await res.json();
-      
-      // Si Drive devolvió URLs, actualizar el proyecto con ellas
-      // (reemplaza base64 por URL de Drive para no saturar UserProperties)
-      if (json.ok && json.urls) {
-        const updated = { ...currentProject };
-        if (json.urls.images?.length) {
-          updated.images = json.urls.images; // URLs de Drive en vez de base64
+
+      if (res.ok) {
+        const json = await res.json();
+
+        if (json.ok) {
+          // Reemplazar base64 con URLs de Drive en el proyecto
+          const updated = { ...currentProject };
+
+          if (json.urls?.images?.length) {
+            // Conservar URLs ya existentes + agregar las nuevas de Drive
+            const urlsExistentes = (currentProject.images || [])
+              .filter(img => img && !img.startsWith('data:'));
+            updated.images = [...urlsExistentes, ...json.urls.images];
+          }
+
+          if (json.urls?.attachments) {
+            updated.attachments = (currentProject.attachments || []).map(att => ({
+              name: att.name,
+              path: att.path,
+              type: att.type,
+              size: att.size,
+              driveUrl: json.urls.attachments[att.path || att.name] || att.driveUrl || null
+              // ✅ sin att.data → no satura UserProperties
+            }));
+          }
+
+          // ✅ Actualizar estado React con URLs reales → UI se refresca correctamente
+          projectsToSave = newProjects.map(p =>
+            p.id === updated.id ? updated : p
+          );
+          setProjects(projectsToSave); // ← CRÍTICO: esto faltaba
         }
-        if (json.urls.attachments) {
-          updated.attachments = updated.attachments.map(att => ({
-            ...att,
-            data: undefined, // ya no necesitamos el base64
-            driveUrl: json.urls.attachments[att.path || att.name] || att.driveUrl
-          }));
-        }
-        newProjects = newProjects.map(p => p.id === updated.id ? updated : p);
       }
     }
-    // Luego guardar metadata limpia en UserProperties
+
+    // 2. Guardar metadata limpia (sin base64) en UserProperties
     await fetch(window.GAS_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'guardar', data: newProjects })
+      body: JSON.stringify({ action: 'guardar', data: projectsToSave })
     });
-  } catch(e) { console.warn('Error persistiendo:', e); }
-};
 
+  } catch (e) {
+    console.warn('Error persistiendo:', e);
+  }
+};
             const handleSave = (data) => {
                 setLoading(true);
                 const isUpdate  = !!editingProject;
