@@ -117,7 +117,9 @@
         // ============================================================================
         // 2. COMPONENTE VITRINA DE DOCUMENTOS (DOCS)
         // ============================================================================
-        // 1.1 COMPONENTE AUXILIAR: VENTANA FLOTANTE (Workspace)
+        // ============================================================================
+// 2. COMPONENTE: VENTANA FLOTANTE (Workspace)
+// ============================================================================
 const DraggableWindow = ({ win, onUpdate, onClose, onFocus, globalDragging, setGlobalDragging }) => {
   const [pos, setPos] = useState({ x: win.x, y: win.y, w: win.w, h: win.h });
   const [isInteracting, setIsInteracting] = useState(false);
@@ -216,7 +218,8 @@ const DraggableWindow = ({ win, onUpdate, onClose, onFocus, globalDragging, setG
   );
 };
 
-// 2. COMPONENTE VITRINA DE DOCUMENTOS (DOCS)
+// ============================================================================
+// 3. COMPONENTE PRINCIPAL: VITRINA DE DOCUMENTOS
 // ============================================================================
 const VitrinaDocsPage = () => {
   const DOCS_API_URL = 'https://script.google.com/macros/s/AKfycbz0TYQPqnqvqPhhOps8s3v-kGAocNYwM3-FQqMdIOgygER2jov-YuxmlgV-YtEwgaRHWA/exec';
@@ -228,13 +231,13 @@ const VitrinaDocsPage = () => {
   const [coverImage, setCoverImage] = useState('');
   const [isDraggingImg, setIsDraggingImg] = useState(false);
 
-  // Estados del Workspace
+  // Estados del Workspace Multiventana
   const [openWindows, setOpenWindows] = useState([]);
   const [workspaceActive, setWorkspaceActive] = useState(false);
   const [topZ, setTopZ] = useState(10);
   const [globalDragging, setGlobalDragging] = useState(false);
 
-  // Estado Seguridad Admin
+  // Estado Seguridad Admin (Claves)
   const [adminAuth, setAdminAuth] = useState({ isOpen: false, action: null, payload: null, error: false });
   const [adminPasswordInput, setAdminPasswordInput] = useState('');
 
@@ -253,6 +256,7 @@ const VitrinaDocsPage = () => {
     }
   ];
 
+  // Carga inicial
   useEffect(() => {
     const loadDocs = async () => {
       try {
@@ -270,6 +274,7 @@ const VitrinaDocsPage = () => {
 
   useEffect(() => { if (view === 'form') setCoverImage(editingDoc?.imagen || ''); }, [view, editingDoc]);
 
+  // Manejo del pegado de imágenes
   useEffect(() => {
     if (view !== 'form') return;
     const handlePaste = (e) => {
@@ -327,11 +332,13 @@ const VitrinaDocsPage = () => {
     setView('grid'); setEditingDoc(null); setCoverImage('');
   };
 
+  // Triggers de Seguridad
   const triggerEdit = (doc, e) => { e.stopPropagation(); setAdminAuth({ isOpen: true, action: 'edit', payload: doc, error: false }); setAdminPasswordInput(''); };
   const triggerDelete = (id, e) => { e.stopPropagation(); setAdminAuth({ isOpen: true, action: 'delete', payload: id, error: false }); setAdminPasswordInput(''); };
 
   const handleAdminSubmit = (e) => {
     e.preventDefault();
+    // Reemplaza esto en tu local con process.env o import.meta.env según tu entorno (Vite/CRA)
     let realPassword = 'admin123'; 
     try { if (typeof process !== 'undefined' && process.env?.VITE_ADMIN_PASSWORD) realPassword = process.env.VITE_ADMIN_PASSWORD; } catch (error) {}
 
@@ -390,6 +397,8 @@ const VitrinaDocsPage = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-6 animate-in fade-in duration-700 pb-40">
+      
+      {/* ---------------- VISTA GRID ---------------- */}
       {view === 'grid' ? (
         <div>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
@@ -415,6 +424,8 @@ const VitrinaDocsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {docs.map((doc) => (
               <div key={doc.id} onClick={() => openDocumentInWorkspace(doc)} className="group bg-white/[0.03] border border-white/10 hover:border-purple-500/50 rounded-[2.5rem] flex flex-col cursor-pointer transition-all hover:bg-white/[0.05] hover:-translate-y-1 active:scale-95 overflow-hidden relative shadow-xl">
+                
+                {/* Botones Flotantes (Lápiz y Basura) */}
                 <div className="absolute top-4 right-4 flex gap-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button onClick={(e) => triggerEdit(doc, e)} className="w-10 h-10 bg-black/60 backdrop-blur-md rounded-xl flex items-center justify-center text-white hover:bg-indigo-500 transition-colors shadow-lg border border-white/10"><Icon name="Pencil" size={16} /></button>
                   <button onClick={(e) => triggerDelete(doc.id, e)} className="w-10 h-10 bg-black/60 backdrop-blur-md rounded-xl flex items-center justify-center text-white hover:bg-red-500 transition-colors shadow-lg border border-white/10"><Icon name="Trash" size={16} /></button>
@@ -436,6 +447,8 @@ const VitrinaDocsPage = () => {
           </div>
         </div>
       ) : (
+
+        /* ---------------- VISTA FORMULARIO ---------------- */
         <div className="max-w-2xl mx-auto animate-in slide-in-from-bottom-8 duration-500 pb-32">
           <div className="flex items-center justify-between mb-8">
             <div>
@@ -472,7 +485,7 @@ const VitrinaDocsPage = () => {
         </div>
       )}
 
-      {/* WORKSPACE FLOTANTE */}
+      {/* ---------------- WORKSPACE FLOTANTE ---------------- */}
       {workspaceActive && (
         <div className="fixed inset-0 z-[2000] flex flex-col bg-[#07090E]/95 backdrop-blur-md animate-in fade-in duration-300">
           <div className="h-14 bg-black/80 border-b border-white/10 flex items-center justify-between px-6 shrink-0 z-[2500]">
@@ -493,12 +506,12 @@ const VitrinaDocsPage = () => {
         </div>
       )}
 
-      {/* Modal Admin Auth */}
+      {/* ---------------- MODAL ADMIN (Clave de Seguridad) ---------------- */}
       {adminAuth.isOpen && (
         <div className="fixed inset-0 z-[3000] flex items-center justify-center bg-[#07090E]/80 backdrop-blur-sm animate-in fade-in duration-200 p-4">
           <div className="bg-[#0a0c13] border border-white/10 p-8 rounded-[2rem] max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200">
             <h3 className="text-xl font-black text-white mb-2">Acceso Administrativo</h3>
-            <p className="text-slate-400 text-xs mb-6 leading-relaxed">{adminAuth.action === 'delete' ? 'Ingresa la clave maestra para eliminar.' : 'Ingresa la clave maestra para editar.'}</p>
+            <p className="text-slate-400 text-xs mb-6 leading-relaxed">{adminAuth.action === 'delete' ? 'Ingresa la clave maestra para eliminar.' : 'Ingresa la clave maestra para editar o añadir.'}</p>
             <form onSubmit={handleAdminSubmit}>
               <input type="password" autoFocus value={adminPasswordInput} onChange={(e) => setAdminPasswordInput(e.target.value)} placeholder="Ingresa la clave..." className="w-full bg-black/40 border border-white/10 focus:border-purple-500 rounded-xl py-3 px-4 text-white outline-none transition-colors mb-2" />
               {adminAuth.error && <p className="text-red-400 text-[10px] font-bold mb-4">❌ Clave incorrecta.</p>}
@@ -513,6 +526,7 @@ const VitrinaDocsPage = () => {
     </div>
   );
 };
+
 
         // ============================================================================
         // 3. COMPONENTE DE VENTAS
