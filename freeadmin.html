@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vitrina de Documentos - Freework</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; background: #07090E; font-family: sans-serif; }
+
+    @keyframes spin   { to { transform: rotate(360deg); } }
+    @keyframes pulse  { 0%,100%{opacity:1} 50%{opacity:.5} }
+    @keyframes fadein { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fiber  { 0%{transform:translateX(-150%)} 100%{transform:translateX(300%)} }
+
+    .spin    { animation: spin 1s linear infinite; }
+    .pulse   { animation: pulse 2s ease-in-out infinite; }
+    .fadein  { animation: fadein 0.5s ease forwards; }
+    .fiber1  { animation: fiber 3s cubic-bezier(.4,0,.2,1) infinite; }
+    .fiber2  { animation: fiber 5s cubic-bezier(.4,0,.2,1) infinite 1.5s; }
+
+    .glass {
+      background: rgba(5,7,12,0.75);
+      backdrop-filter: blur(48px) saturate(180%);
+      -webkit-backdrop-filter: blur(48px) saturate(180%);
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 40px 80px -16px rgba(0,0,0,1), inset 0 1px 1px rgba(255,255,255,0.08);
+    }
+    .brand  { background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%); }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0c13; }
+    ::-webkit-scrollbar-thumb { background: #2d2f3a; border-radius: 3px; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+const SCRIPT_URL   = "https://script.google.com/macros/s/AKfycbzUn0OHXXwbUX9QHXh2E0YUE9BYhKPU2psJ_lQ-OwDAfu7Cznxu01CIu9XgMA5GGdVI/exec";
+const DOCS_API_URL = "https://script.google.com/macros/s/AKfycbz0TYQPqnqvqPhhOps8s3v-kGAocNYwM3-FQqMdIOgygER2jov-YuxmlgV-YtEwgaRHWA/exec";
+const ADMIN_PASS   = "admin123";
+
+// ── ICONO ──────────────────────────────────────────────────────────────────
+const Icon = ({ name, size = 16, className = "" }) => {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (!ref.current) return;
+    ref.current.innerHTML = "";
+    const el = document.createElement("i");
+    el.setAttribute("data-lucide", name);
+    ref.current.appendChild(el);
+    lucide.createIcons({ nodes: [el] });
+    const svg = ref.current.querySelector("svg");
+    if (svg) { svg.setAttribute("width", size); svg.setAttribute("height", size); }
+  }, [name, size]);
+  return <span ref={ref} className={`inline-flex items-center justify-center ${className}`} />;
+};
+
+// ── AUTH HOOK ──────────────────────────────────────────────────────────────
+function useAuth() {
+  const [user,    setUser]    = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const saved   = localStorage.getItem("freework_user");
+    const session = localStorage.getItem("fw_session");
+    if (saved && session) setUser(JSON.parse(saved));
+    setLoading(false);
+  }, []);
+
+  const login = async (email, password) => {
+    try {
+      // Intento 1 — string
+      let res  = await fetch(SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "login", email, password })
+      });
+      let data = await res.json();
+
+      // Intento 2 — número (si falla y la contraseña es numérica)
+      if (!data.success && !isNaN(password) && password !== "") {
+        res  = await fetch(SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ action: "login", email, password: Number(password) })
+        });
+        data = await res.json();
+      }
+
+      if (data.success) {
+        localStorage.setItem("freework_user", JSON.stringify(data.user));
+        localStorage.setItem("fw_session",    Date.now().toString());
+        setUser(data.user);
+        return { success: true };
+      }
+      return { success: false, message: data.message || "Credenciales incorrectas" };
+    } catch (err) {
+      return { success: false, message: "Error de conexión: " + err.message };
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem("freework_user");
+    localStorage.removeItem("fw_session");
+    setUser(null);
+  };
+
+  return { user, loading, login, logout };
+}
+
+// ── PANTALLA DE LOGIN ──────────────────────────────────────────────────────
+function LoginScreen({ onSuccess }) {
+  const [email,    setEmail]    = useState("");
+  const [password, setPassword] = useState("");
+  const [error,    setError]    = useState("");
+  const [busy,     setBusy]     = useState(false);
+  const { login } = useAuth();
+
+  const submit = async (e) => {
+    e.preventDefault();
+    if (!email || !password) { setError("Ingresa tus credenciales"); return; }
+    setBusy(true); setError("");
+    const r = await login(email, password);
+    if (r.success) { onSuccess(); }
+    else           { setError(r.message); setBusy(false); }
+  };
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-[#07090E] overflow-hidden">
+
+      {/* Fondos */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-[-10%] -left-[20%] w-[500px] h-[500px] bg-violet-600/10 rounded-full blur-[140px]" />
+        <div className="absolute bottom-[-10%] -right-[20%] w-[500px] h-[500px] bg-fuchsia-600/5 rounded-full blur-[140px]" />
+        <div className="absolute top-[35%] -left-[10%] w-[120%] h-[1px] rotate-[-12deg] overflow-hidden opacity-80">
+          <div className="w-1/2 h-full bg-gradient-to-r from-transparent via-fuchsia-400 to-transparent fiber1" />
+        </div>
+        <div className="absolute top-[65%] -left-[10%] w-[120%] h-[1px] rotate-[8deg] overflow-hidden opacity-60">
+          <div className="w-1/2 h-full bg-gradient-to-r from-transparent via-violet-400 to-transparent fiber2" />
+        </div>
+      </div>
+
+      {/* Card */}
+      <div className="relative z-10 w-full max-w-sm mx-4 fadein">
+        <div className="glass rounded-[2rem] p-10">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl brand mb-4 shadow-[0_0_30px_rgba(168,85,247,0.4)]">
+              <Icon name="file-spreadsheet" size={32} className="text-white" />
+            </div>
+            <h1 className="text-2xl font-black text-white tracking-tight">FREEWORK</h1>
+            <p className="text-[10px] text-fuchsia-400 font-black uppercase tracking-[0.2em] mt-1">VITRINA DE DOCUMENTOS</p>
+          </div>
+
+          <form onSubmit={submit} className="space-y-3">
+            <div className="flex items-center bg-black/40 border border-white/10 rounded-xl px-4 h-12 focus-within:border-purple-500 transition-colors">
+              <Icon name="mail" size={15} className="text-slate-500 mr-3 shrink-0" />
+              <input type="email" required value={email} onChange={e => setEmail(e.target.value)}
+                placeholder="Correo del Socio Comercial"
+                className="bg-transparent outline-none text-white text-sm w-full placeholder:text-slate-600" />
+            </div>
+            <div className="flex items-center bg-black/40 border border-white/10 rounded-xl px-4 h-12 focus-within:border-purple-500 transition-colors">
+              <Icon name="key" size={15} className="text-slate-500 mr-3 shrink-0" />
+              <input type="password" required value={password} onChange={e => setPassword(e.target.value)}
+                placeholder="Contraseña"
+                className="bg-transparent outline-none text-white text-sm w-full placeholder:text-slate-600" />
+            </div>
+
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3">
+                <p className="text-red-400 text-xs text-center">{error}</p>
+              </div>
+            )}
+
+            <button type="submit" disabled={busy}
+              className="w-full h-12 mt-2 brand rounded-xl text-white font-black text-xs uppercase tracking-[0.15em] transition-all disabled:opacity-50 active:scale-[0.98] flex items-center justify-center gap-2 shadow-[0_10px_30px_-8px_rgba(168,85,247,0.5)]">
+              {busy
+                ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin" />
+                : <><Icon name="power" size={14} /> Inicializar Sistema</>
+              }
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── VENTANA FLOTANTE ───────────────────────────────────────────────────────
+function DraggableWindow({ win, onClose, onFocus, onUpdate, globalDragging, setGlobalDragging }) {
+  const [pos,      setPos]    = useState({ x:win.x, y:win.y, w:win.w, h:win.h });
+  const [interact, setInter]  = useState(false);
+  const posRef                = useRef(pos);
+
+  useEffect(() => { posRef.current = pos; }, [pos]);
+  useEffect(() => { setPos({ x:win.x, y:win.y, w:win.w, h:win.h }); }, [win.x, win.y, win.w, win.h]);
+
+  const drag = (e) => {
+    e.preventDefault(); onFocus(win.id); setInter(true); setGlobalDragging(true);
+    const sx=e.clientX, sy=e.clientY, px=pos.x, py=pos.y;
+    const move = ev => setPos(p => ({ ...p, x: px+((ev.clientX-sx)/window.innerWidth)*100, y: py+((ev.clientY-sy)/window.innerHeight)*100 }));
+    const up   = () => { setInter(false); setGlobalDragging(false); window.removeEventListener("mousemove",move); window.removeEventListener("mouseup",up); if(onUpdate) onUpdate(win.id, posRef.current); };
+    window.addEventListener("mousemove",move); window.addEventListener("mouseup",up);
+  };
+
+  const resize = (e) => {
+    e.preventDefault(); e.stopPropagation(); onFocus(win.id); setInter(true); setGlobalDragging(true);
+    const sx=e.clientX, sy=e.clientY, sw=pos.w, sh=pos.h;
+    const move = ev => setPos(p => ({ ...p, w: Math.max(15,sw+((ev.clientX-sx)/window.innerWidth)*100), h: Math.max(15,sh+((ev.clientY-sy)/window.innerHeight)*100) }));
+    const up   = () => { setInter(false); setGlobalDragging(false); window.removeEventListener("mousemove",move); window.removeEventListener("mouseup",up); if(onUpdate) onUpdate(win.id, posRef.current); };
+    window.addEventListener("mousemove",move); window.addEventListener("mouseup",up);
+  };
+
+  const dot = (win.doc.color||"text-purple-400").replace("text-","bg-");
+
+  return (
+    <div onMouseDown={() => onFocus(win.id)}
+      className="absolute flex flex-col bg-[#0a0c13] border border-white/20 shadow-2xl rounded-2xl overflow-hidden"
+      style={{ left:`${pos.x}%`, top:`${pos.y}%`, width:`${pos.w}%`, height:`${pos.h}%`, zIndex:win.z,
+               boxShadow: interact ? "0 25px 50px -12px rgba(147,51,234,0.5)" : "0 25px 50px -12px rgba(0,0,0,0.5)" }}>
+      <div onMouseDown={drag} className="h-10 bg-black/80 flex items-center justify-between px-4 cursor-move select-none border-b border-white/10 shrink-0">
+        <div className="flex items-center gap-2 overflow-hidden">
+          <div className={`w-2 h-2 rounded-full ${dot}`} />
+          <span className="text-white text-xs font-black uppercase tracking-widest truncate">{win.doc.titulo}</span>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <a href={win.doc.url} target="_blank" rel="noreferrer" onMouseDown={e=>e.stopPropagation()} className="text-slate-500 hover:text-white transition-colors">
+            <Icon name="external-link" size={13} />
+          </a>
+          <button onMouseDown={e=>e.stopPropagation()} onClick={()=>onClose(win.id)} className="text-slate-500 hover:text-red-400 transition-colors ml-1">
+            <Icon name="x" size={15} />
+          </button>
+        </div>
+      </div>
+      <div className="flex-1 relative bg-white">
+        {(globalDragging||interact) && <div className="absolute inset-0 z-50" />}
+        <iframe src={win.doc.url} className="w-full h-full border-none" title={win.doc.titulo} />
+      </div>
+      <div onMouseDown={resize} className="absolute bottom-0 right-0 w-10 h-10 cursor-nwse-resize z-50 flex items-end justify-end p-2 opacity-40 hover:opacity-100 bg-white/10 hover:bg-white/20 rounded-tl-xl transition-all border-t border-l border-white/10">
+        <div className="w-3 h-3 border-r-2 border-b-2 border-white/80 rounded-br mb-1 mr-1" />
+      </div>
+    </div>
+  );
+}
+
+// ── VITRINA ────────────────────────────────────────────────────────────────
+function VitrinaPage() {
+  const DEFAULT_DOCS = [
+    { id:1, titulo:"Reporte Q3",  descripcion:"Métricas de rendimiento.", url:"https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/htmlembed?widget=true&headers=false", imagen:"https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800", color:"text-emerald-400", bg:"bg-emerald-500/10", textoLibre:"", enlaces:[] },
+    { id:2, titulo:"Inventario",  descripcion:"Control de stock.",         url:"https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/htmlembed?widget=true&headers=false", imagen:"https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=800", color:"text-blue-400",    bg:"bg-blue-500/10",    textoLibre:"", enlaces:[] },
+  ];
+
+  const [docs,      setDocs]      = useState([]);
+  const [loadingD,  setLoadingD]  = useState(true);
+  const [view,      setView]      = useState("grid");
+  const [editDoc,   setEditDoc]   = useState(null);
+  const [coverImg,  setCoverImg]  = useState("");
+  const [dragImg,   setDragImg]   = useState(false);
+  const [tempLinks, setTempLinks] = useState([]);
+  const [isAdmin,   setIsAdmin]   = useState(localStorage.getItem("vitrina_admin")==="true");
+  const [admModal,  setAdmModal]  = useState({ open:false, action:null, payload:null, err:false });
+  const [admPass,   setAdmPass]   = useState("");
+  const [wins,      setWins]      = useState([]);
+  const [wsActive,  setWsActive]  = useState(false);
+  const [topZ,      setTopZ]      = useState(10);
+  const [globDrag,  setGlobDrag]  = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res  = await fetch(`${DOCS_API_URL}?action=cargar&t=${Date.now()}`);
+        const json = await res.json();
+        setDocs(json.data?.length ? json.data : DEFAULT_DOCS);
+      } catch { setDocs(DEFAULT_DOCS); }
+      finally  { setLoadingD(false); }
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (view === "form") { setCoverImg(editDoc?.imagen||""); setTempLinks(editDoc?.enlaces||[]); }
+  }, [view, editDoc]);
+
+  useEffect(() => {
+    if (view !== "form") return;
+    const h = (e) => {
+      const it = e.clipboardData?.items; if (!it) return;
+      for (let i=0;i<it.length;i++) if (it[i].type.indexOf("image")!==-1) { e.preventDefault(); imgFile(it[i].getAsFile()); break; }
+    };
+    document.addEventListener("paste",h);
+    return () => document.removeEventListener("paste",h);
+  }, [view]);
+
+  const imgFile = (file) => {
+    if (!file?.type.startsWith("image/")) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new window.Image();
+      img.onload = () => {
+        const c = document.createElement("canvas");
+        let w=img.width, h=img.height;
+        if (w>800){h=h*800/w;w=800;} if (h>800){w=w*800/h;h=800;}
+        c.width=w; c.height=h;
+        c.getContext("2d").drawImage(img,0,0,w,h);
+        setCoverImg(c.toDataURL("image/jpeg",0.7));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const persist = async (nd) => {
+    try { await fetch(DOCS_API_URL,{ method:"POST", mode:"no-cors", headers:{"Content-Type":"application/json"}, body:JSON.stringify({action:"guardar",data:nd}) }); } catch {}
+  };
+
+  const handleSave = (e) => {
+    e.preventDefault();
+    const fd  = new FormData(e.target);
+    const doc = { titulo:fd.get("titulo"), descripcion:fd.get("descripcion"), url:fd.get("url"), textoLibre:fd.get("textoLibre")||"", enlaces:tempLinks, imagen:coverImg||"https://images.unsplash.com/photo-1618044733300-9472054094ee?auto=format&fit=crop&q=80&w=800", color:editDoc?.color||"text-indigo-400", bg:editDoc?.bg||"bg-indigo-500/10" };
+    const nd  = editDoc ? docs.map(d=>d.id===editDoc.id?{...d,...doc}:d) : [{id:Date.now(),...doc},...docs];
+    setDocs(nd); persist(nd);
+    setView("grid"); setEditDoc(null); setCoverImg("");
+  };
+
+  const triggerEdit   = (doc,e) => { e.stopPropagation(); if(isAdmin){setEditDoc(doc);setView("form");}else{setAdmModal({open:true,action:"edit",payload:doc,err:false});setAdmPass("");} };
+  const triggerDelete = (id, e) => { e.stopPropagation(); if(isAdmin){if(confirm("¿Eliminar?")){ const nd=docs.filter(d=>d.id!==id);setDocs(nd);persist(nd);}}else{setAdmModal({open:true,action:"delete",payload:id,err:false});setAdmPass("");} };
+  const submitAdmin   = (e) => {
+    e.preventDefault();
+    if (admPass===ADMIN_PASS) {
+      setIsAdmin(true); localStorage.setItem("vitrina_admin","true");
+      const {action,payload}=admModal; setAdmModal({open:false});
+      if(action==="edit")  {setEditDoc(payload);setView("form");}
+      if(action==="delete"){const nd=docs.filter(d=>d.id!==payload);setDocs(nd);persist(nd);}
+    } else { setAdmModal(m=>({...m,err:true})); }
+  };
+
+  const autoLayout = (count, ws) => {
+    const L=[];
+    if(count===1)L.push({x:0,y:0,w:100,h:100});
+    else if(count===2){L.push({x:0,y:0,w:50,h:100});L.push({x:50,y:0,w:50,h:100});}
+    else if(count===3){L.push({x:0,y:0,w:50,h:100});L.push({x:50,y:0,w:50,h:50});L.push({x:50,y:50,w:50,h:50});}
+    else if(count===4){L.push({x:0,y:0,w:50,h:50});L.push({x:50,y:0,w:50,h:50});L.push({x:0,y:50,w:50,h:50});L.push({x:50,y:50,w:50,h:50});}
+    else{const c=Math.ceil(Math.sqrt(count)),r=Math.ceil(count/c);for(let i=0;i<count;i++)L.push({x:(i%c)*(100/c),y:Math.floor(i/c)*(100/r),w:100/c,h:100/r});}
+    return ws.map((w,i)=>({...w,...L[i]}));
+  };
+
+  const openDoc  = (doc) => { if(wins.find(w=>w.id===doc.id)){focusWin(doc.id);setWsActive(true);return;} const nz=topZ+1;setTopZ(nz);const next=[...wins,{id:doc.id,doc,x:0,y:0,w:100,h:100,z:nz}];setWins(autoLayout(next.length,next));setWsActive(true); };
+  const closeWin = (id)  => { const n=wins.filter(w=>w.id!==id);setWins(n);if(!n.length)setWsActive(false); };
+  const focusWin = (id)  => { const nz=topZ+1;setTopZ(nz);setWins(ws=>ws.map(w=>w.id===id?{...w,z:nz}:w)); };
+  const updateWin= (id,p)=> setWins(ws=>ws.map(w=>w.id===id?{...w,...p}:w));
+
+  if (loadingD) return (
+    <div className="flex flex-col items-center justify-center py-32">
+      <div className="w-10 h-10 border-4 border-purple-500/20 border-t-purple-500 rounded-full spin mb-4" />
+      <p className="text-slate-500 text-xs font-bold uppercase tracking-widest pulse">Sincronizando...</p>
+    </div>
+  );
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 md:px-6 pb-40 fadein">
+
+      {/* GRID */}
+      {view==="grid" && (
+        <div>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+            <div>
+              <h2 className="text-4xl font-black text-white tracking-tighter">Vitrina de Documentos</h2>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mt-1">Workspace Colaborativo</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {wins.length>0 && (
+                <button onClick={()=>setWsActive(true)} className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all active:scale-95 pulse">
+                  <Icon name="layers" size={15} /> Workspace ({wins.length})
+                </button>
+              )}
+              {isAdmin && (
+                <button onClick={()=>{setIsAdmin(false);localStorage.removeItem("vitrina_admin");}} className="flex items-center gap-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 px-4 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all active:scale-95">
+                  <Icon name="shield-off" size={13} /> Salir Admin
+                </button>
+              )}
+              <button onClick={e=>triggerEdit(null,e)} className="flex items-center gap-2 bg-purple-600 hover:bg-purple-500 text-white px-5 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-purple-600/20">
+                <Icon name="plus" size={15} /> Añadir
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            {docs.map(doc => (
+              <div key={doc.id} onClick={()=>openDoc(doc)}
+                className="group bg-white/[0.03] border border-white/10 hover:border-purple-500/40 rounded-[2.5rem] flex flex-col md:flex-row cursor-pointer transition-all hover:bg-white/[0.05] hover:-translate-y-1 active:scale-[0.99] overflow-hidden relative shadow-xl">
+
+                <div className="absolute top-4 right-4 flex gap-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button onClick={e=>triggerEdit(doc,e)}    className="w-10 h-10 bg-black/60 backdrop-blur-md rounded-xl flex items-center justify-center text-white hover:bg-indigo-500 border border-white/10 transition-colors"><Icon name="pencil"   size={14} /></button>
+                  <button onClick={e=>triggerDelete(doc.id,e)} className="w-10 h-10 bg-black/60 backdrop-blur-md rounded-xl flex items-center justify-center text-white hover:bg-red-500   border border-white/10 transition-colors"><Icon name="trash-2"  size={14} /></button>
+                </div>
+
+                <div className="relative w-full md:w-80 h-48 md:h-auto shrink-0 overflow-hidden border-b md:border-b-0 md:border-r border-white/5">
+                  <img src={doc.imagen} alt={doc.titulo} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    onError={e=>{e.target.onerror=null;e.target.src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Crect width='100%25' height='100%25' fill='%231e1e24'/%3E%3C/svg%3E";}} />
+                  <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#07090E] via-[#07090E]/40 to-transparent opacity-90" />
+                  <div className={`absolute top-4 left-4 w-12 h-12 rounded-2xl ${doc.bg} ${doc.color} flex items-center justify-center border border-white/10 shadow-xl`}>
+                    <Icon name="file-spreadsheet" size={22} />
+                  </div>
+                </div>
+
+                <div className="p-6 md:p-8 flex flex-col flex-1 justify-center relative z-10">
+                  <h3 className="text-2xl font-black text-white mb-2 pr-24 leading-tight">{doc.titulo}</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed mb-5">{doc.descripcion}</p>
+                  {doc.enlaces?.length>0 && (
+                    <div className="flex flex-wrap gap-2 mb-5">
+                      {doc.enlaces.map(link=>(
+                        <button key={link.id} onClick={e=>{e.stopPropagation();openDoc({id:link.id,titulo:link.titulo,url:link.url,color:doc.color,bg:doc.bg});}}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-slate-300 hover:text-white transition-all">
+                          <Icon name="link" size={11} className="text-purple-400" />{link.titulo}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-400 group-hover:text-purple-400 transition-colors mt-auto pt-4 border-t border-white/5">
+                    <Icon name="maximize-2" size={13} /> Abrir Principal
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* FORMULARIO */}
+      {view==="form" && (
+        <div className="max-w-2xl mx-auto pb-32 fadein">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-3xl font-black text-white tracking-tighter">{editDoc?"Editar Documento":"Nuevo Documento"}</h2>
+              <p className="text-slate-500 mt-1 text-sm">Añade una vista rápida a tus documentos.</p>
+            </div>
+            <button onClick={()=>{setView("grid");setEditDoc(null);setCoverImg("");}} className="w-10 h-10 bg-white/5 hover:bg-white/10 rounded-2xl flex items-center justify-center text-slate-400 transition-colors">
+              <Icon name="x" size={20} />
+            </button>
+          </div>
+          <form onSubmit={handleSave} className="space-y-5 bg-white/[0.02] border border-white/10 p-6 md:p-10 rounded-[3rem]">
+            <div>
+              <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Título *</label>
+              <input required name="titulo" defaultValue={editDoc?.titulo} placeholder="Ej. Reporte de Ventas..." className="w-full bg-[#0a0c13] border border-white/10 focus:border-purple-500 rounded-2xl py-3 px-4 text-white outline-none transition-colors" />
+            </div>
+            <div>
+              <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Descripción *</label>
+              <textarea required name="descripcion" defaultValue={editDoc?.descripcion} rows="3" placeholder="¿De qué trata este documento?" className="w-full bg-[#0a0c13] border border-white/10 focus:border-purple-500 rounded-2xl py-3 px-4 text-white outline-none transition-colors resize-none" />
+            </div>
+            <div>
+              <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Notas Privadas</label>
+              <textarea name="textoLibre" defaultValue={editDoc?.textoLibre} rows="3" placeholder="Apuntes internos..." className="w-full bg-[#0a0c13] border border-white/10 focus:border-purple-500 rounded-2xl py-3 px-4 text-white outline-none transition-colors resize-none" />
+            </div>
+            <div>
+              <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">URL Principal (Iframe) *</label>
+              <input required name="url" defaultValue={editDoc?.url} placeholder="https://docs.google.com/..." className="w-full bg-[#0a0c13] border border-white/10 focus:border-purple-500 rounded-2xl py-3 px-4 text-white outline-none transition-colors font-mono text-sm" />
+            </div>
+            <div className="bg-black/20 p-5 rounded-3xl border border-white/5">
+              <div className="flex items-center justify-between mb-4">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2"><Icon name="link" size={13} /> Enlaces Adicionales</label>
+                <button type="button" onClick={()=>setTempLinks([...tempLinks,{id:Date.now(),titulo:"",url:""}])}
+                  className="text-[10px] font-black uppercase tracking-widest bg-purple-500/20 hover:bg-purple-500/40 text-purple-300 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+                  <Icon name="plus-circle" size={11} /> Añadir
+                </button>
+              </div>
+              {tempLinks.length===0 && <p className="text-slate-600 text-xs text-center py-3 italic">Sin enlaces adicionales.</p>}
+              {tempLinks.map(link=>(
+                <div key={link.id} className="flex gap-2 items-center bg-[#0a0c13] p-3 rounded-2xl border border-white/5 mb-2">
+                  <input placeholder="Título" value={link.titulo} onChange={e=>setTempLinks(tl=>tl.map(l=>l.id===link.id?{...l,titulo:e.target.value}:l))} className="w-1/3 bg-transparent text-sm text-white outline-none placeholder:text-slate-600" />
+                  <div className="w-px h-5 bg-white/10" />
+                  <input type="url" placeholder="https://..." value={link.url} onChange={e=>setTempLinks(tl=>tl.map(l=>l.id===link.id?{...l,url:e.target.value}:l))} className="flex-1 bg-transparent text-sm font-mono text-slate-300 outline-none placeholder:text-slate-600" />
+                  <button type="button" onClick={()=>setTempLinks(tl=>tl.filter(l=>l.id!==link.id))} className="w-8 h-8 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl flex items-center justify-center transition-colors shrink-0">
+                    <Icon name="trash-2" size={13} />
+                  </button>
+                </div>
+              ))}
+            </div>
+            <div>
+              <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Portada</label>
+              <div onDragOver={e=>{e.preventDefault();setDragImg(true);}} onDragLeave={()=>setDragImg(false)} onDrop={e=>{e.preventDefault();setDragImg(false);if(e.dataTransfer.files[0])imgFile(e.dataTransfer.files[0]);}}
+                className={`relative w-full h-40 rounded-2xl border-2 border-dashed overflow-hidden flex items-center justify-center transition-all ${dragImg?"border-purple-500 bg-purple-500/10":"border-white/20 bg-black/30 hover:bg-white/5"}`}>
+                {coverImg
+                  ? <><img src={coverImg} className="absolute inset-0 w-full h-full object-cover opacity-50"/><button type="button" onClick={()=>setCoverImg("")} className="relative z-10 bg-red-500/80 text-white p-2 rounded-xl hover:bg-red-500"><Icon name="trash-2" size={18}/></button></>
+                  : <div className="text-center pointer-events-none"><Icon name="upload-cloud" size={28} className="text-slate-500 mb-2 mx-auto"/><p className="text-slate-400 text-xs">Arrastra o Ctrl+V</p></div>
+                }
+                {!coverImg && <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={e=>imgFile(e.target.files[0])} />}
+              </div>
+              <input value={coverImg} onChange={e=>setCoverImg(e.target.value)} placeholder="O pega una URL de imagen" className="w-full mt-2 bg-[#0a0c13] border border-white/10 focus:border-purple-500 rounded-2xl py-3 px-4 text-white outline-none transition-colors font-mono text-xs" />
+            </div>
+            <div className="pt-4 border-t border-white/5 flex gap-3">
+              <button type="button" onClick={()=>{setView("grid");setEditDoc(null);setCoverImg("");}} className="flex-1 py-3 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-colors">Cancelar</button>
+              <button type="submit" className="flex-[2] py-3 bg-purple-600 hover:bg-purple-500 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-600/20">
+                <Icon name="save" size={14}/> Guardar
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* WORKSPACE */}
+      {wsActive && (
+        <div className="fixed inset-0 z-[2000] flex flex-col bg-[#07090E]/95 backdrop-blur-md">
+          <div className="h-14 bg-black/80 border-b border-white/10 flex items-center justify-between px-6 shrink-0">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center"><Icon name="layers" size={16}/></div>
+              <div>
+                <p className="text-white font-black text-sm uppercase tracking-widest">Workspace</p>
+                <p className="text-[10px] text-slate-500 font-bold uppercase">{wins.length} Ventanas</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <button onClick={()=>setWins(autoLayout(wins.length,wins))} className="flex items-center gap-2 px-4 py-2 bg-purple-600/20 hover:bg-purple-600/40 text-purple-300 rounded-xl text-[10px] font-black uppercase border border-purple-500/30 transition-colors"><Icon name="layout-grid" size={12}/> Auto-Ordenar</button>
+              <button onClick={()=>setWsActive(false)} className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-xl text-[10px] font-black uppercase border border-white/10 transition-colors"><Icon name="minimize-2" size={12}/> Minimizar</button>
+              <button onClick={()=>{setWins([]);setWsActive(false);}} className="flex items-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl text-[10px] font-black uppercase border border-red-500/20 transition-colors"><Icon name="x" size={12}/> Cerrar Todo</button>
+            </div>
+          </div>
+          <div className="flex-1 relative overflow-hidden p-2">
+            {wins.map(w=><DraggableWindow key={w.id} win={w} onClose={closeWin} onFocus={focusWin} onUpdate={updateWin} globalDragging={globDrag} setGlobalDragging={setGlobDrag}/>)}
+          </div>
+        </div>
+      )}
+
+      {/* MODAL ADMIN */}
+      {admModal.open && (
+        <div className="fixed inset-0 z-[3000] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+          <div className="bg-[#0a0c13] border border-white/10 p-8 rounded-[2rem] max-w-sm w-full shadow-2xl fadein">
+            <h3 className="text-xl font-black text-white mb-2">Acceso Administrativo</h3>
+            <p className="text-slate-400 text-xs mb-6">{admModal.action==="delete"?"Clave para eliminar.":"Clave para editar."}</p>
+            <form onSubmit={submitAdmin}>
+              <input type="password" autoFocus value={admPass} onChange={e=>setAdmPass(e.target.value)} placeholder="Clave maestra..." className="w-full bg-black/40 border border-white/10 focus:border-purple-500 rounded-xl py-3 px-4 text-white outline-none transition-colors mb-2" />
+              {admModal.err && <p className="text-red-400 text-xs mb-3">❌ Clave incorrecta.</p>}
+              <div className="flex gap-3 mt-4">
+                <button type="button" onClick={()=>setAdmModal({open:false})} className="flex-1 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl font-bold text-xs transition-colors">Cancelar</button>
+                <button type="submit" className={`flex-1 py-3 text-white rounded-xl font-bold text-xs transition-all ${admModal.action==="delete"?"bg-red-600 hover:bg-red-500":"bg-purple-600 hover:bg-purple-500"}`}>
+                  {admModal.action==="delete"?"Eliminar":"Continuar"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── APP ────────────────────────────────────────────────────────────────────
+function App() {
+  const { user, loading, login, logout } = useAuth();
+  const [tick, setTick] = useState(0);
+
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full spin" />
+    </div>
+  );
+
+  if (!user) {
+    // Pasamos login directamente al LoginScreen para que use el mismo hook
+    return <LoginScreenDirect login={login} onSuccess={()=>setTick(t=>t+1)} />;
+  }
+
+  return (
+    <div className="min-h-screen bg-[#07090E]">
+      <div className="fixed top-4 right-4 z-50 flex items-center gap-3 bg-black/60 backdrop-blur-md rounded-full px-4 py-2 border border-white/10">
+        <span className="text-xs text-purple-400 font-bold">{user.name || user.email}</span>
+        <button onClick={logout} className="text-xs text-slate-400 hover:text-red-400 transition-colors">Salir</button>
+      </div>
+      <div className="pt-16"><VitrinaPage /></div>
+    </div>
+  );
+}
+
+// Login con login inyectado (evita doble instancia del hook)
+function LoginScreenDirect({ login, onSuccess }) {
+  const [email,    setEmail]    = useState("");
+  const [password, setPassword] = useState("");
+  const [error,    setError]    = useState("");
+  const [busy,     setBusy]     = useState(false);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    if (!email||!password){setError("Ingresa tus credenciales");return;}
+    setBusy(true); setError("");
+    const r = await login(email, password);
+    if (r.success) onSuccess();
+    else { setError(r.message); setBusy(false); }
+  };
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-[#07090E] overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-[-10%] -left-[20%] w-[500px] h-[500px] bg-violet-600/10 rounded-full blur-[140px]"/>
+        <div className="absolute bottom-[-10%] -right-[20%] w-[500px] h-[500px] bg-fuchsia-600/5 rounded-full blur-[140px]"/>
+        <div className="absolute top-[35%] -left-[10%] w-[120%] h-[1px] rotate-[-12deg] overflow-hidden opacity-80"><div className="w-1/2 h-full bg-gradient-to-r from-transparent via-fuchsia-400 to-transparent fiber1"/></div>
+        <div className="absolute top-[65%] -left-[10%] w-[120%] h-[1px] rotate-[8deg]  overflow-hidden opacity-60"><div className="w-1/2 h-full bg-gradient-to-r from-transparent via-violet-400  to-transparent fiber2"/></div>
+      </div>
+      <div className="relative z-10 w-full max-w-sm mx-4 fadein">
+        <div className="glass rounded-[2rem] p-10">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl brand mb-4 shadow-[0_0_30px_rgba(168,85,247,0.4)]">
+              <Icon name="file-spreadsheet" size={32} className="text-white"/>
+            </div>
+            <h1 className="text-2xl font-black text-white tracking-tight">FREEWORK</h1>
+            <p className="text-[10px] text-fuchsia-400 font-black uppercase tracking-[0.2em] mt-1">VITRINA DE DOCUMENTOS</p>
+          </div>
+          <form onSubmit={submit} className="space-y-3">
+            <div className="flex items-center bg-black/40 border border-white/10 rounded-xl px-4 h-12 focus-within:border-purple-500 transition-colors">
+              <Icon name="mail" size={15} className="text-slate-500 mr-3 shrink-0"/>
+              <input type="email" required value={email} onChange={e=>setEmail(e.target.value)} placeholder="Correo del Socio Comercial" className="bg-transparent outline-none text-white text-sm w-full placeholder:text-slate-600"/>
+            </div>
+            <div className="flex items-center bg-black/40 border border-white/10 rounded-xl px-4 h-12 focus-within:border-purple-500 transition-colors">
+              <Icon name="key" size={15} className="text-slate-500 mr-3 shrink-0"/>
+              <input type="password" required value={password} onChange={e=>setPassword(e.target.value)} placeholder="Contraseña" className="bg-transparent outline-none text-white text-sm w-full placeholder:text-slate-600"/>
+            </div>
+            {error && <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3"><p className="text-red-400 text-xs text-center">{error}</p></div>}
+            <button type="submit" disabled={busy} className="w-full h-12 mt-2 brand rounded-xl text-white font-black text-xs uppercase tracking-[0.15em] transition-all disabled:opacity-50 active:scale-[0.98] flex items-center justify-center gap-2 shadow-[0_10px_30px_-8px_rgba(168,85,247,0.5)]">
+              {busy ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full spin"/> : <><Icon name="power" size={14}/> Inicializar Sistema</>}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
