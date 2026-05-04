@@ -85,13 +85,15 @@
         }
 
         async function apiGuardar(proyectos) {
-            await fetch(window.GAS_URL, {
-                method:  'POST',
-                mode:    'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body:    JSON.stringify({ action: 'guardar', data: proyectos })
-            });
-        }
+    const res = await fetch(window.GAS_URL, {
+        method:  'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body:    JSON.stringify({ action: 'guardar', data: proyectos })
+    });
+    const json = await res.json();
+    console.log('[GAS guardar]', json);
+    return json;
+}
 
         // Exporta los archivos físicos del proyecto a Google Drive
         async function apiExportar(proyecto) {
@@ -683,8 +685,10 @@
                 } else if (GAS_CONFIGURED) {
                     apiCargar()
 
-                        .then(data => { setProjects(data.length > 0 ? data : []); setLoading(false); })
-                        .catch(err  => { console.error(err); setGasError(true); setProjects(MOCK_DATA); setLoading(false); });
+                // BUG6 FIX: mostrar vacío si GAS devuelve array vacío (no MOCK_DATA)
+apiCargar()
+    .then(data => { setProjects(data.length > 0 ? data : []); setLoading(false); })
+    .catch(err  => { console.error(err); setGasError(true); setProjects(MOCK_DATA); setLoading(false); });
                 } else {
                     setTimeout(() => { setProjects(MOCK_DATA); setLoading(false); }, 600);
                 }
@@ -698,6 +702,11 @@
 
             // En la función persistir() del App, reemplazar el bloque GAS_CONFIGURED por:
              // =============================================================
+//  REEMPLAZAR SOLO ESTAS DOS FUNCIONES dentro del componente App
+// =============================================================
+
+// ── CORRECCIÓN: persistir es ahora async y sin mode:'no-cors'
+// =============================================================
 //  REEMPLAZAR SOLO ESTAS DOS FUNCIONES dentro del componente App
 // =============================================================
 
