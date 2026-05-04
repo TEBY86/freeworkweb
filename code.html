@@ -692,7 +692,11 @@ apiCargar()
                 } else {
                     setTimeout(() => { setProjects(MOCK_DATA); setLoading(false); }, 600);
                 }
-            }, []);
+            })
+    .catch(err => { 
+        setProjects(MOCK_DATA);  // MANTÉN MOCK_DATA
+        setLoading(false); 
+    });
 
 
 
