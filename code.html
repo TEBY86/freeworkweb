@@ -65,7 +65,7 @@
          Acceso debe ser: "Cualquiera"
          ===================================================== -->
     <script>
-        window.GAS_URL = 'https://script.google.com/macros/s/AKfycbwWslX_PCSmbam0l27QZfPwF62xi33eN2xoDS8Vr6EdrqZJKON9qVwfgoMCS4g2t9tGVw/exec';
+        window.GAS_URL = 'https://script.google.com/macros/s/AKfycbzasuDAxMCfFIKNgjnB6gXFxqqa6BVEy7NoI5d63c10IDlzHGfajP4lcLwfltKKwBnM8g/exec';
     </script>
 
     <div id="root"></div>
@@ -682,91 +682,110 @@
                         .cargarBaseDeDatos();
                 } else if (GAS_CONFIGURED) {
                     apiCargar()
-                        .then(data => { setProjects(data.length > 0 ? data : MOCK_DATA); setLoading(false); })
+
+                        .then(data => { setProjects(data.length > 0 ? data : []); setLoading(false); })
                         .catch(err  => { console.error(err); setGasError(true); setProjects(MOCK_DATA); setLoading(false); });
                 } else {
                     setTimeout(() => { setProjects(MOCK_DATA); setLoading(false); }, 600);
                 }
             }, []);
 
+
+
+
+
+
+
             // En la función persistir() del App, reemplazar el bloque GAS_CONFIGURED por:
+             // =============================================================
+//  REEMPLAZAR SOLO ESTAS DOS FUNCIONES dentro del componente App
+// =============================================================
+
+// ── CORRECCIÓN: persistir es ahora async y sin mode:'no-cors'
 const persistir = async (newProjects, currentProject = null) => {
-  if (!GAS_CONFIGURED) return;
-  try {
-    let projectsToSave = newProjects;
+    if (!GAS_CONFIGURED) return;
+    try {
+        let projectsToSave = newProjects;
 
-    // 1. Si hay un proyecto nuevo/editado con base64, exportar a Drive PRIMERO
-    if (currentProject) {
-      const res = await fetch(window.GAS_URL, {
-        method: 'POST',
-        // ✅ SIN mode:'no-cors' → ahora podemos leer la respuesta
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'exportar', proyecto: currentProject })
-      });
+        // 1. Si hay proyecto nuevo/editado con base64, exportar a Drive PRIMERO
+        if (currentProject) {
+            const tieneBase64 = (currentProject.images || []).some(img => img && img.startsWith('data:'))
+                || (currentProject.attachments || []).some(att => att.data);
 
-      if (res.ok) {
-        const json = await res.json();
+            if (tieneBase64) {
+                // BUG1 FIX: sin mode:'no-cors' → podemos leer la respuesta
+                const res = await fetch(window.GAS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' }, // GAS acepta text/plain sin preflight
+                    body: JSON.stringify({ action: 'exportar', proyecto: currentProject })
+                });
 
-        if (json.ok) {
-          // Reemplazar base64 con URLs de Drive en el proyecto
-          const updated = { ...currentProject };
+                if (res.ok) {
+                    const json = await res.json();
+                    if (json.ok) {
+                        const updated = { ...currentProject };
 
-          if (json.urls?.images?.length) {
-            // Conservar URLs ya existentes + agregar las nuevas de Drive
-            const urlsExistentes = (currentProject.images || [])
-              .filter(img => img && !img.startsWith('data:'));
-            updated.images = [...urlsExistentes, ...json.urls.images];
-          }
+                        if (json.urls?.images?.length) {
+                            const urlsExistentes = (currentProject.images || [])
+                                .filter(img => img && !img.startsWith('data:'));
+                            updated.images = [...urlsExistentes, ...json.urls.images];
+                        }
 
-          if (json.urls?.attachments) {
-            updated.attachments = (currentProject.attachments || []).map(att => ({
-              name: att.name,
-              path: att.path,
-              type: att.type,
-              size: att.size,
-              driveUrl: json.urls.attachments[att.path || att.name] || att.driveUrl || null
-              // ✅ sin att.data → no satura UserProperties
-            }));
-          }
+                        if (json.urls?.attachments) {
+                            updated.attachments = (currentProject.attachments || []).map(att => ({
+                                name: att.name,
+                                path: att.path,
+                                type: att.type,
+                                size: att.size,
+                                driveUrl: json.urls.attachments[att.path || att.name] || att.driveUrl || null
+                                // BUG5 FIX: sin att.data → no satura UserProperties con base64
+                            }));
+                        }
 
-          // ✅ Actualizar estado React con URLs reales → UI se refresca correctamente
-          projectsToSave = newProjects.map(p =>
-            p.id === updated.id ? updated : p
-          );
-          setProjects(projectsToSave); // ← CRÍTICO: esto faltaba
+                        projectsToSave = newProjects.map(p =>
+                            p.id === updated.id ? updated : p
+                        );
+                        setProjects(projectsToSave);
+                    }
+                }
+            }
         }
-      }
+
+        // 2. Guardar metadata limpia (sin base64) en UserProperties
+        // BUG1 FIX: sin mode:'no-cors'
+        await fetch(window.GAS_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({ action: 'guardar', data: projectsToSave })
+        });
+
+    } catch (e) {
+        console.warn('Error persistiendo:', e);
     }
-
-    // 2. Guardar metadata limpia (sin base64) en UserProperties
-    await fetch(window.GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'guardar', data: projectsToSave })
-    });
-
-  } catch (e) {
-    console.warn('Error persistiendo:', e);
-  }
 };
-            const handleSave = (data) => {
-                setLoading(true);
-                const isUpdate  = !!editingProject;
-                const cleanData = {
-                    ...data,
-                    id:         isUpdate ? editingProject.id : Date.now(),
-                    files:      data.files.filter(f => f.name.trim()),
-                    steps:      data.steps.filter(s => s.text.trim()),
-                    localPaths: data.localPaths.filter(p => p.label.trim() || p.path.trim()),
-                    attachments: data.attachments || []
-                };
-                const newProjects = isUpdate
-                    ? projects.map(p => p.id === cleanData.id ? cleanData : p)
-                    : [cleanData, ...projects];
-                setProjects(newProjects);
-                persistir(newProjects, cleanData);
-                setTimeout(() => { setLoading(false); setView('grid'); setEditingProject(null); }, 400);
-            };
+
+// ── CORRECCIÓN: handleSave espera que persistir termine antes de cerrar el form
+const handleSave = async (data) => {  // BUG2+3 FIX: async, sin setTimeout
+    setLoading(true);
+    const isUpdate  = !!editingProject;
+    const cleanData = {
+        ...data,
+        id:          isUpdate ? editingProject.id : Date.now(),
+        files:       data.files.filter(f => f.name.trim()),
+        steps:       data.steps.filter(s => s.text.trim()),
+        localPaths:  data.localPaths.filter(p => p.label.trim() || p.path.trim()),
+        attachments: data.attachments || []
+    };
+    const newProjects = isUpdate
+        ? projects.map(p => p.id === cleanData.id ? cleanData : p)
+        : [cleanData, ...projects];
+
+    setProjects(newProjects);
+    await persistir(newProjects, cleanData); // BUG2 FIX: await → el fetch completa antes de continuar
+    setLoading(false);
+    setView('grid');
+    setEditingProject(null);
+};
 
             const handleDelete = (id) => {
                 if (!confirm("¿Eliminar registro de forma permanente?")) return;
